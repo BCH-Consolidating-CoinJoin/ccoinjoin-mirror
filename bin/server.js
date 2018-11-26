@@ -9,6 +9,10 @@ const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
 
+// Load the ccoinjoin-network library.
+const Network = require('../../ccoinjoin-network')
+const network = new Network()
+
 // Winston logger
 const wlogger = require('../src/utils/logging')
 
@@ -65,6 +69,9 @@ async function startServer () {
   await app.listen(config.port)
   console.log(`Server started on ${config.port}`)
   wlogger.info(`Server started on ${config.port}`)
+
+  // Connect to the IPFS network and subscribe to the DB.
+  network.connectToIPFS()
 
   return app
 }
