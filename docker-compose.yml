@@ -1,0 +1,32 @@
+# Start the testnet server with the command 'docker-compose up -d'
+
+ccoinjoin-mongodb:
+  image: mongo
+  ports:
+    - "3500:27017" # <host port>:<container port>
+  volumes:
+    - ./database:/data/db
+  command: mongod --smallfiles --logpath=/dev/null # -- quiet
+  restart: always
+
+ccoinjoin:
+  build: .
+  dockerfile: Dockerfile
+  links:
+    - ccoinjoin-mongodb
+  ports:
+    - "5000:5000"  # <host port>:<container port>
+  volumes:
+    - ./logs:/home/coinjoin/consolidating-coinjoin/logs
+    - ./keys:/home/coinjoin/consolidating-coinjoin/keys
+
+  restart: always
+
+tor:
+  image: goldy/tor-hidden-service
+  links:
+    - ccoinjoin
+  environment:
+      PORT_MAP: 80 # Map port to detected service
+  volumes:
+    - ./keys:/var/lib/tor/hidden_service/
