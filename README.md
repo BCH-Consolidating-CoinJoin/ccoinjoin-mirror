@@ -4,13 +4,12 @@ This is a [koa api server](https://github.com/christroutner/babel-free-koa2-api-
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
-[![Build Status](https://travis-ci.org/BCH-Consolidating-CoinJoin/consolidating-coinjoin.svg?branch=master)](https://travis-ci.org/BCH-Consolidating-CoinJoin/consolidating-coinjoin)
+[![Build Status](https://travis-ci.org/BCH-Consolidating-CoinJoin/ccoinjoin-mirror.svg?branch=master)](https://travis-ci.org/BCH-Consolidating-CoinJoin/ccoinjoin-mirror)
+
+[![Coverage Status](https://coveralls.io/repos/github/BCH-Consolidating-CoinJoin/ccoinjoin-mirror/badge.svg?branch=master)](https://coveralls.io/github/BCH-Consolidating-CoinJoin/ccoinjoin-mirror?branch=master)
 
 
-[![Coverage Status](https://coveralls.io/repos/github/BCH-Consolidating-CoinJoin/consolidating-coinjoin/badge.svg?branch=master)](https://coveralls.io/github/BCH-Consolidating-CoinJoin/consolidating-coinjoin?branch=master)
-
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/BCH-Consolidating-CoinJoin/consolidating-coinjoin.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/BCH-Consolidating-CoinJoin/ccoinjoin-mirror.svg)](https://greenkeeper.io/)
 
 
 ## Requirements
