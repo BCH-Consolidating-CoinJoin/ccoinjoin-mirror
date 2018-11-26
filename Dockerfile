@@ -31,11 +31,11 @@ RUN echo 'password' | sudo -S pwd
 
 # Clone the rest.bitcoin.com repository
 WORKDIR /home/coinjoin
-RUN git clone https://github.com/BCH-Consolidating-CoinJoin/ccoinjoin-server
+RUN git clone https://github.com/BCH-Consolidating-CoinJoin/ccoinjoin-mirror
 
 # Switch to the desired branch. `master` is usually stable,
 # and `stage` has the most up-to-date changes.
-WORKDIR /home/coinjoin/ccoinjoin-server
+WORKDIR /home/coinjoin/ccoinjoin-mirror
 
 # For development: switch to unstable branch
 RUN git checkout unstable
@@ -43,11 +43,10 @@ RUN git checkout unstable
 # Install dependencies
 RUN npm install
 
-VOLUME /home/coinjoin/ccoinjoin-server/logs
+VOLUME /home/coinjoin/ccoinjoin-mirror/logs
 
 # Start the application.
 COPY start-production start-production
-COPY make-keys-dir-readable make-keys-dir-readable
 CMD ["./start-production"]
 
 #CMD ["npm", "start"]

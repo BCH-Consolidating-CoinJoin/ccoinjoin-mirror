@@ -18,15 +18,6 @@ ccoinjoin:
     - "5000:5000"  # <host port>:<container port>
   volumes:
     - ./logs:/home/coinjoin/consolidating-coinjoin/logs
-    - ./keys:/home/coinjoin/consolidating-coinjoin/keys
+#    - ./keys:/home/coinjoin/consolidating-coinjoin/keys
 
   restart: always
-
-tor:
-  image: goldy/tor-hidden-service
-  links:
-    - ccoinjoin
-  environment:
-      PORT_MAP: 80 # Map port to detected service
-  volumes:
-    - ./keys:/var/lib/tor/hidden_service/
