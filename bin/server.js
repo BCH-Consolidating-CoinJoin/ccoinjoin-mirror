@@ -10,8 +10,10 @@ const serve = require('koa-static')
 const cors = require('kcors')
 
 // Load the ccoinjoin-network library.
-const Network = require('../../ccoinjoin-network')
+// const Network = require('../../ccoinjoin-network')
+const Network = require('ccoinjoin-network')
 const network = new Network()
+const UPDATE_PERIOD = 1000 * 60 // 1 minute
 
 // Winston logger
 const wlogger = require('../src/utils/logging')
@@ -70,8 +72,32 @@ async function startServer () {
   console.log(`Server started on ${config.port}`)
   wlogger.info(`Server started on ${config.port}`)
 
+  const now = new Date()
+  const hostname = `test${Math.floor(Math.random() * 1000)}`
+
+  // Construct the server information
+  const serverConfig = {
+    server: hostname,
+    timestamp: now.toISOString(),
+    localTimestamp: now.toLocaleString()
+  }
+
   // Connect to the IPFS network and subscribe to the DB.
-  network.connectToIPFS()
+  await network.connectToIPFS()
+
+  // Broadcast server information onto the network.
+  await network.writeDB(serverConfig)
+
+  // Create a timer that periodically updates the server information on the DB.
+  setInterval(async function () {
+    const newNow = new Date()
+    serverConfig.timestamp = newNow.toISOString()
+    serverConfig.localeTimestamp = newNow.toLocaleString()
+
+    console.log(`Updating server entry at ${newNow.toLocaleString()}`)
+
+    await network.writeDB(serverConfig)
+  }, UPDATE_PERIOD)
 
   return app
 }
