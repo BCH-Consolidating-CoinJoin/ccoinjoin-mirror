@@ -1,5 +1,5 @@
 # Consolidating CoinJoin Mirror
-This is a [koa api server](https://github.com/christroutner/babel-free-koa2-api-boilerplate), similar to [Consolidating CoinJoin Server](https://github.com/BCH-Consolidating-CoinJoin/ccoinjoin-server), but much more slimmed down. Unlike the server, this app does not engage in any CoinJoin activities. Instead, it mirrors the peer-to-peer database. It's purpose is to help support the network by rebroadcasting the list of network servers. Unlike the server, there should be no legal repercussions to running it.
+This is a [koa api server](https://github.com/christroutner/babel-free-koa2-api-boilerplate), similar to [Consolidating CoinJoin Server](https://github.com/BCH-Consolidating-CoinJoin/ccoinjoin-server), but much more slimmed down. Unlike the server, this app does not engage in any CoinJoin activities. Instead, it only mirrors the peer-to-peer database. It's purpose is to help support the network by rebroadcasting the list of network servers. Unlike the server, there should be no (potential) legal repercussions to running it.
 
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
@@ -18,7 +18,7 @@ This is a [koa api server](https://github.com/christroutner/babel-free-koa2-api-
 * npm __^5.7.1__
 
 ## Installation
-Installation is different depending on if you want to create a *development* server for developing the code, or a *production* server for setting up your own Consolidating CoinJoin service.
+Installation is different depending on if you want to create a *development* server for developing the code, or a *production* server running as a Docker container.
 
 ### Development
 - `npm install` to install npm dependencies.
