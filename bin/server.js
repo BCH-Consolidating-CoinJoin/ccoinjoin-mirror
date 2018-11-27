@@ -9,6 +9,9 @@ const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
 
+const util = require('util')
+util.inspect.defaultOptions = { depth: 1 }
+
 // Load the ccoinjoin-network library.
 // const Network = require('../../ccoinjoin-network')
 const Network = require('ccoinjoin-network')
@@ -84,6 +87,16 @@ async function startServer () {
 
   // Connect to the IPFS network and subscribe to the DB.
   await network.connectToIPFS()
+
+  // Determine the IPFS ID for use with the /ipfsid endpoint.
+  network.ipfs.id(function (err, identity) {
+    if (err) {
+      throw err
+    }
+    // console.log(`my identity: ${util.inspect(identity)}`)
+
+    process.env.IPFS_ID = identity.id
+  })
 
   // Broadcast server information onto the network.
   await network.writeDB(serverConfig)
