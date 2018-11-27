@@ -109,6 +109,9 @@ async function startServer () {
 
     console.log(`Updating server entry at ${newNow.toLocaleString()}`)
 
+    const peers = await network.ipfs.swarm.peers()
+    console.log(`peers: ${peers.length}`)
+
     await network.writeDB(serverConfig)
   }, UPDATE_PERIOD)
 
