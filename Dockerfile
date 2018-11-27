@@ -44,6 +44,8 @@ VOLUME /home/coinjoin/ccoinjoin-mirror/logs
 
 # Expose the port the API will be served on.
 EXPOSE 4001
+EXPOSE 4002
+EXPOSE 4003
 
 # Start the application.
 COPY start-production start-production
