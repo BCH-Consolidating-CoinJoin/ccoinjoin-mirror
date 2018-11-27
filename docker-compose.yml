@@ -18,6 +18,7 @@ ccoinjoin-mirror:
     - "4001:4001"  # <host port>:<container port>
     - "4002:4002"
     - "4003:4003"
+    - "5000:5000"
   volumes:
     - ./logs:/home/coinjoin/consolidating-coinjoin/logs
 #    - ./keys:/home/coinjoin/consolidating-coinjoin/keys

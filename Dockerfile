@@ -43,9 +43,10 @@ RUN npm install
 VOLUME /home/coinjoin/ccoinjoin-mirror/logs
 
 # Expose the port the API will be served on.
-EXPOSE 4001
-EXPOSE 4002
-EXPOSE 4003
+EXPOSE 4001 # IPFS
+EXPOSE 4002 # IPFS
+EXPOSE 4003 # IPFS
+EXPOSE 5000 # API Server
 
 # Start the application.
 COPY start-production start-production
