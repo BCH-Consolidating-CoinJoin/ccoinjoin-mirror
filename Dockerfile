@@ -21,9 +21,6 @@ RUN chown -R coinjoin .npm-global
 RUN echo "export PATH=~/.npm-global/bin:$PATH" >> /home/coinjoin/.profile
 RUN runuser -l coinjoin -c "npm config set prefix '~/.npm-global'"
 
-# Expose the port the API will be served on.
-EXPOSE 5000
-
 # Switch to user account.
 USER coinjoin
 # Prep 'sudo' commands.
@@ -44,6 +41,9 @@ RUN git checkout unstable
 RUN npm install
 
 VOLUME /home/coinjoin/ccoinjoin-mirror/logs
+
+# Expose the port the API will be served on.
+EXPOSE 4001
 
 # Start the application.
 COPY start-production start-production
