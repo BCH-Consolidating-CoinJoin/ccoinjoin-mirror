@@ -88,6 +88,8 @@ async function startServer () {
   // Connect to the IPFS network and subscribe to the DB.
   await network.connectToIPFS()
 
+  console.log(`Database IPFS ID: ${network.db.id}`)
+
   // Determine the IPFS ID for use with the /ipfsid endpoint.
   network.ipfs.id(function (err, identity) {
     if (err) {
@@ -96,6 +98,7 @@ async function startServer () {
     // console.log(`my identity: ${util.inspect(identity)}`)
 
     process.env.IPFS_ID = identity.id
+    console.log(`IPFS ID: ${identity.id}`)
   })
 
   // Broadcast server information onto the network.
