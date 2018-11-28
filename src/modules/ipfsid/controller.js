@@ -4,7 +4,10 @@
 */
 
 async function getIPFSID (ctx) {
-  ctx.body = { ipfsid: process.env.IPFS_ID }
+  ctx.body = {
+    ipfsid: process.env.IPFS_ID,
+    orbitAddr: process.env.ORBITDB_ID
+  }
 }
 
 module.exports = {
