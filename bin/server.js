@@ -88,6 +88,9 @@ async function startServer () {
   // Connect to the IPFS network and subscribe to the DB.
   await network.connectToIPFS()
 
+  // Connect to the Orbit DB
+  await network.connectToOrbitDB()
+
   // Determine the IPFS ID for use with the /ipfsid endpoint.
   network.ipfs.id(function (err, identity) {
     if (err) {
