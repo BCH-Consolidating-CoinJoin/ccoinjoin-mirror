@@ -13,8 +13,8 @@ const util = require('util')
 util.inspect.defaultOptions = { depth: 1 }
 
 // Load locally saved data.
-const ccoinjoinBootstrap = require('./data/ccoinjoin-bootstrap.json')
-const knownServers = require('./data/known-servers.json')
+const ccoinjoinBootstrap = require('../peers/ccoinjoin-bootstrap.json')
+const knownServers = require('../peers/known-servers.json')
 
 // Load the ccoinjoin-network library.
 // const Network = require('../../ccoinjoin-network')
