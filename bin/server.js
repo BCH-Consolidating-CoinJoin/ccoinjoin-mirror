@@ -138,7 +138,7 @@ async function startServer () {
 
     const newNow = new Date()
     serverConfig.timestamp = newNow.toISOString()
-    serverConfig.localeTimestamp = newNow.toLocaleString()
+    serverConfig.localTimestamp = newNow.toLocaleString()
 
     console.log(`Updating server entry at ${newNow.toLocaleString()}`)
 
@@ -148,7 +148,7 @@ async function startServer () {
     await network.writeDB(serverConfig)
 
     let latest = await network.readDB()
-    latest = latest.slice(0, 5)
+    latest = latest.reverse().slice(0, 5)
     const data = []
     for (var i = 0; i < latest.length; i++) {
       data.push(latest[i].payload.value)
