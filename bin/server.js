@@ -148,8 +148,12 @@ async function startServer () {
     await network.writeDB(serverConfig)
 
     let latest = await network.readDB()
-    // latest = latest.slice(0, 5)
-    console.log(`Latest entries: ${JSON.stringify(latest, null, 2)}`)
+    latest = latest.slice(0, 5)
+    const data = []
+    for (var i = 0; i < latest.length; i++) {
+      data.push(latest[i].payload.value)
+    }
+    console.log(`Latest entries: ${JSON.stringify(data, null, 2)}`)
   }, UPDATE_PERIOD)
 
   return app
