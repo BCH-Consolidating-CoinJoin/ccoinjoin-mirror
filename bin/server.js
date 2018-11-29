@@ -114,6 +114,7 @@ async function startServer () {
 
     // Prevent the node from trying to connect to itself.
     if (thisPeer.indexOf(ipfsId) === -1) {
+      console.log(`thisPeer: ${thisPeer}`)
       // Connect to the bootstrap peers
       await network.ipfs.swarm.connect(thisPeer)
     }
