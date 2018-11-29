@@ -20,7 +20,7 @@ const knownPeers = require('../peers/known-peers.json')
 // const Network = require('../../ccoinjoin-network')
 const Network = require('ccoinjoin-network')
 const network = new Network()
-const UPDATE_PERIOD = 1000 * 10 // 1 minute
+const UPDATE_PERIOD = 1000 * 60 // 1 minute
 
 // Winston logger
 const wlogger = require('../src/utils/logging')
@@ -79,36 +79,10 @@ async function startServer () {
   console.log(`Server started on ${config.port}`)
   wlogger.info(`Server started on ${config.port}`)
 
-  const now = new Date()
-  const hostname = `test${Math.floor(Math.random() * 1000)}`
-
-  // Construct the server information
-  const serverConfig = {
-    server: hostname,
-    timestamp: now.toISOString(),
-    localTimestamp: now.toLocaleString()
-  }
-
   // Connect to the IPFS network and subscribe to the DB.
   await network.connectToIPFS()
 
   // Determine the IPFS ID for use with the /ipfsid endpoint.
-  /*
-  let ipfsId
-  network.ipfs.id(function (err, identity) {
-    if (err) {
-      throw err
-    }
-    // console.log(`my identity: ${util.inspect(identity)}`)
-
-    ipfsId = identity.id
-    process.env.IPFS_ID = ipfsId
-    console.log(`IPFS ID: ${ipfsId}`)
-
-    // console.log(`Database IPFS ID: ${network.db.id}`)
-    // process.env.ORBITDB_ID = network.db.id
-  })
-  */
   const thisIpfsInfo = await network.ipfs.id()
   const ipfsId = thisIpfsInfo.id
   process.env.IPFS_ID = ipfsId
@@ -124,6 +98,14 @@ async function startServer () {
       // Connect to the bootstrap peers
       await network.ipfs.swarm.connect(thisPeer)
     }
+  }
+
+  // Construct the server information DB entry
+  const now = new Date()
+  const serverConfig = {
+    server: ipfsId,
+    timestamp: now.toISOString(),
+    localTimestamp: now.toLocaleString()
   }
 
   // Connect to the Orbit DB
@@ -149,26 +131,14 @@ async function startServer () {
 
     let latest = await network.readDB()
     const servers = getUniquePeers(latest)
-    console.log(`peers: ${JSON.stringify(servers, null, 2)}`)
-
-    // const payloads = latest.map(entry => entry.payload.value)
-    // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
-
-    // const unique = payloads.filter(getUnique)
-    // console.log(`unique: ${JSON.stringify(unique, null, 2)}`)
-
-    // latest = latest.reverse().slice(0, 5)
-    // const data = []
-    // for (var i = 0; i < latest.length; i++) {
-    // data.push(latest[i].payload.value)
-    //  console.log(`Latest entries: ${JSON.stringify(latest[i].payload.value, null, 2)}`)
-    // }
+    console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
   }, UPDATE_PERIOD)
 
   return app
 }
 // startServer()
 
+// Gets the mutliaddr for unique peers
 function getUniquePeers (dbRawData) {
   const payloads = dbRawData.map(entry => entry.payload.value)
   const peers = payloads.map(entry => entry.server)
@@ -177,6 +147,8 @@ function getUniquePeers (dbRawData) {
   return uniquePeers
 }
 
+// A filter function for identifying unique entries.
+// https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
 function getUnique (value, index, self) {
   return self.indexOf(value) === index
 }
