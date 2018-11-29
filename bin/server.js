@@ -149,11 +149,11 @@ async function startServer () {
 
     let latest = await network.readDB()
     latest = latest.reverse().slice(0, 5)
-    const data = []
+    // const data = []
     for (var i = 0; i < latest.length; i++) {
-      data.push(latest[i].payload.value)
+      // data.push(latest[i].payload.value)
+      console.log(`Latest entries: ${JSON.stringify(latest[i].payload.value, null, 2)}`)
     }
-    console.log(`Latest entries: ${JSON.stringify(data, null, 2)}`)
   }, UPDATE_PERIOD)
 
   return app
