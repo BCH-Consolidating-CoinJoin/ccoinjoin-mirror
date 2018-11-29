@@ -92,28 +92,30 @@ async function startServer () {
   // Connect to the IPFS network and subscribe to the DB.
   await network.connectToIPFS()
 
-  // Add all bootstrap peers to the IPFS swarm.
-  for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
-    const thisPeer = ccoinjoinBootstrap.bootstrapPeers[i]
-    await network.ipfs.swarm.connect(thisPeer)
-  }
-
-  // Connect to the Orbit DB
-  await network.connectToOrbitDB(ccoinjoinBootstrap.dbAddress)
-
   // Determine the IPFS ID for use with the /ipfsid endpoint.
+  let ipfsId
   network.ipfs.id(function (err, identity) {
     if (err) {
       throw err
     }
     // console.log(`my identity: ${util.inspect(identity)}`)
 
-    process.env.IPFS_ID = identity.id
-    console.log(`IPFS ID: ${identity.id}`)
+    ipfsId = identity.id
+    process.env.IPFS_ID = ipfsId
+    console.log(`IPFS ID: ${ipfsId}`)
 
-    console.log(`Database IPFS ID: ${network.db.id}`)
-    process.env.ORBITDB_ID = network.db.id
+    // console.log(`Database IPFS ID: ${network.db.id}`)
+    // process.env.ORBITDB_ID = network.db.id
   })
+
+  // Add all bootstrap peers to the IPFS swarm.
+  for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
+    const thisPeer = ccoinjoinBootstrap.bootstrapPeers[i]
+    if (thisPeer !== ipfsId) { await network.ipfs.swarm.connect(thisPeer) }
+  }
+
+  // Connect to the Orbit DB
+  await network.connectToOrbitDB(ccoinjoinBootstrap.dbAddress)
 
   // Broadcast server information onto the network.
   await network.writeDB(serverConfig)
