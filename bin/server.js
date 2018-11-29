@@ -85,6 +85,9 @@ async function startServer () {
   // Determine the IPFS ID for use with the /ipfsid endpoint.
   const thisIpfsInfo = await network.ipfs.id()
   console.log(`thisIpfsInfo: ${util.inspect(thisIpfsInfo)}`)
+  const multiaddr = getMultiaddr(thisIpfsInfo)
+  console.log(`multiaddr: ${multiaddr}`)
+
   const ipfsId = thisIpfsInfo.id
   process.env.IPFS_ID = ipfsId
   console.log(`IPFS ID: ${ipfsId}`)
@@ -104,7 +107,7 @@ async function startServer () {
   // Construct the server information DB entry
   const now = new Date()
   const serverConfig = {
-    server: ipfsId,
+    server: multiaddr,
     timestamp: now.toISOString(),
     localTimestamp: now.toLocaleString()
   }
@@ -152,6 +155,15 @@ function getUniquePeers (dbRawData) {
 // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
 function getUnique (value, index, self) {
   return self.indexOf(value) === index
+}
+
+// This function should (hopefully) return the correct mutliaddr for connecting to this peer.
+function getMultiaddr (thisIpfsInfo) {
+  let addresses = thisIpfsInfo.addresses
+  addresses = addresses.filter(x => x.indexOf('p2p-circuit') === -1)
+  addresses = addresses.filter(x => x.indexOf('127.0.0.1') === -1)
+  const last = addresses.length - 1
+  return addresses[last]
 }
 
 // export default app
