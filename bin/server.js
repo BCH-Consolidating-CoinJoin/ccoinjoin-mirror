@@ -110,6 +110,8 @@ async function startServer () {
 
   // Create a timer that periodically updates the server information on the DB.
   setInterval(async function () {
+    console.log(`DB has synced: ${network.dbHasSynced}`)
+
     const newNow = new Date()
     serverConfig.timestamp = newNow.toISOString()
     serverConfig.localeTimestamp = newNow.toLocaleString()
