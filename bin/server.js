@@ -20,7 +20,7 @@ const knownPeers = require('../peers/known-peers.json')
 // const Network = require('../../ccoinjoin-network')
 const Network = require('ccoinjoin-network')
 const network = new Network()
-const UPDATE_PERIOD = 1000 * 60 // 1 minute
+const UPDATE_PERIOD = 1000 * 10 // 1 minute
 
 // Winston logger
 const wlogger = require('../src/utils/logging')
