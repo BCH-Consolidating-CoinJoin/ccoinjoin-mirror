@@ -10,7 +10,7 @@ const serve = require('koa-static')
 const cors = require('kcors')
 
 const util = require('util')
-util.inspect.defaultOptions = { depth: 1 }
+util.inspect.defaultOptions = { depth: 3 }
 
 // Load locally saved data.
 const ccoinjoinBootstrap = require('../peers/ccoinjoin-bootstrap.json')
@@ -84,9 +84,10 @@ async function startServer () {
 
   // Determine the IPFS ID for use with the /ipfsid endpoint.
   const thisIpfsInfo = await network.ipfs.id()
+  console.log(`thisIpfsInfo: ${util.inspect(thisIpfsInfo)}`)
   const ipfsId = thisIpfsInfo.id
   process.env.IPFS_ID = ipfsId
-  console.log(`IPFS ID: ${util.inspect(ipfsId)}`)
+  console.log(`IPFS ID: ${ipfsId}`)
 
   // Add all bootstrap peers to the IPFS swarm.
   for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
