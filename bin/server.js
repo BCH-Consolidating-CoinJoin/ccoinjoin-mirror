@@ -149,7 +149,10 @@ async function startServer () {
 
     let latest = await network.readDB()
     const payloads = latest.map(entry => entry.payload.value)
-    console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
+    // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
+
+    const unique = payloads.filter(getUnique)
+    console.log(`unique: ${JSON.stringify(unique, null, 2)}`)
 
     // latest = latest.reverse().slice(0, 5)
     // const data = []
@@ -164,7 +167,7 @@ async function startServer () {
 // startServer()
 
 function getUnique (value, index, self) {
-  return self.indexOf()
+  return self.indexOf(value) === index
 }
 
 // export default app
