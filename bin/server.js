@@ -148,17 +148,24 @@ async function startServer () {
     await network.writeDB(serverConfig)
 
     let latest = await network.readDB()
-    latest = latest.reverse().slice(0, 5)
+    const payloads = latest.map(entry => entry.payload.value)
+    console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
+
+    // latest = latest.reverse().slice(0, 5)
     // const data = []
-    for (var i = 0; i < latest.length; i++) {
-      // data.push(latest[i].payload.value)
-      console.log(`Latest entries: ${JSON.stringify(latest[i].payload.value, null, 2)}`)
-    }
+    // for (var i = 0; i < latest.length; i++) {
+    // data.push(latest[i].payload.value)
+    //  console.log(`Latest entries: ${JSON.stringify(latest[i].payload.value, null, 2)}`)
+    // }
   }, UPDATE_PERIOD)
 
   return app
 }
 // startServer()
+
+function getUnique (value, index, self) {
+  return self.indexOf()
+}
 
 // export default app
 // module.exports = app
