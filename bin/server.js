@@ -109,9 +109,10 @@ async function startServer () {
     // process.env.ORBITDB_ID = network.db.id
   })
   */
-  const ipfsId = await network.ipfs.id()
+  const thisIpfsInfo = await network.ipfs.id()
+  const ipfsId = thisIpfsInfo.id
   process.env.IPFS_ID = ipfsId
-  console.log(`IPFS ID: ${ipfsId}`)
+  console.log(`IPFS ID: ${util.inspect(ipfsId)}`)
 
   // Add all bootstrap peers to the IPFS swarm.
   for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
