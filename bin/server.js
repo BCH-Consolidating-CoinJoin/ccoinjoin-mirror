@@ -111,7 +111,12 @@ async function startServer () {
   // Add all bootstrap peers to the IPFS swarm.
   for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
     const thisPeer = ccoinjoinBootstrap.bootstrapPeers[i]
-    if (thisPeer !== ipfsId) { await network.ipfs.swarm.connect(thisPeer) }
+
+    // Prevent the node from trying to connect to itself.
+    if (thisPeer.indexOf(ipfsId) === -1) {
+      // Connect to the bootstrap peers
+      await network.ipfs.swarm.connect(thisPeer)
+    }
   }
 
   // Connect to the Orbit DB
