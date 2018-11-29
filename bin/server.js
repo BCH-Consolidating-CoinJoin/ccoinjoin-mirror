@@ -12,6 +12,10 @@ const cors = require('kcors')
 const util = require('util')
 util.inspect.defaultOptions = { depth: 1 }
 
+// Load locally saved data.
+const ccoinjoinBootstrap = require('./data/ccoinjoin-bootstrap.json')
+const knownServers = require('./data/known-servers.json')
+
 // Load the ccoinjoin-network library.
 // const Network = require('../../ccoinjoin-network')
 const Network = require('ccoinjoin-network')
@@ -88,8 +92,14 @@ async function startServer () {
   // Connect to the IPFS network and subscribe to the DB.
   await network.connectToIPFS()
 
+  // Add all bootstrap peers to the IPFS swarm.
+  for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
+    const thisPeer = ccoinjoinBootstrap.bootstrapPeers[i]
+    await network.ipfs.swarm.connect(thisPeer)
+  }
+
   // Connect to the Orbit DB
-  await network.connectToOrbitDB()
+  await network.connectToOrbitDB(ccoinjoinBootstrap.dbAddress)
 
   // Determine the IPFS ID for use with the /ipfsid endpoint.
   network.ipfs.id(function (err, identity) {
@@ -122,6 +132,10 @@ async function startServer () {
     console.log(`peers: ${peers.length}`)
 
     await network.writeDB(serverConfig)
+
+    let latest = await network.db.readDB()
+    latest = latest.slice(0, 5)
+    console.log(`Latest entries: ${JSON.stringify(latest, null, 2)}`)
   }, UPDATE_PERIOD)
 
   return app
