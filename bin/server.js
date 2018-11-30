@@ -12,9 +12,8 @@ const cors = require('kcors')
 const util = require('util')
 util.inspect.defaultOptions = { depth: 3 }
 
-// Load locally saved data.
-const ccoinjoinBootstrap = require('../peers/ccoinjoin-bootstrap.json')
-const knownPeers = require('../peers/known-peers.json')
+// P2P library used to connect to find and connect to other peers in the IPFS network.
+const P2P = require('../src/utils/p2p')
 
 // Load the ccoinjoin-network library.
 // const Network = require('../../ccoinjoin-network')
@@ -82,27 +81,13 @@ async function startServer () {
   // Connect to the IPFS network and subscribe to the DB.
   await network.connectToIPFS()
 
-  // Determine the IPFS ID for use with the /ipfsid endpoint.
-  const thisIpfsInfo = await network.ipfs.id()
-  // console.log(`thisIpfsInfo: ${util.inspect(thisIpfsInfo)}`)
-  const multiaddr = getMultiaddr(thisIpfsInfo)
+  // Initialze the P2P library
+  const p2p = new P2P(network)
 
-  const ipfsId = thisIpfsInfo.id
-  process.env.IPFS_ID = ipfsId
-  console.log(`IPFS ID: ${ipfsId}`)
-  console.log(`multiaddr: ${multiaddr}`)
+  // Connect to the known peers
+  await p2p.connectToPeers()
 
-  // Add all bootstrap peers to the IPFS swarm.
-  for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
-    const thisPeer = ccoinjoinBootstrap.bootstrapPeers[i]
-
-    // Prevent the node from trying to connect to itself.
-    if (thisPeer.indexOf(ipfsId) === -1) {
-      console.log(`thisPeer: ${thisPeer}`)
-      // Connect to the bootstrap peers
-      await network.ipfs.swarm.connect(thisPeer)
-    }
-  }
+  /*
 
   // Construct the server information DB entry
   const now = new Date()
@@ -137,6 +122,7 @@ async function startServer () {
     const servers = getUniquePeers(latest)
     console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
   }, UPDATE_PERIOD)
+  */
 
   return app
 }
@@ -155,15 +141,6 @@ function getUniquePeers (dbRawData) {
 // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
 function getUnique (value, index, self) {
   return self.indexOf(value) === index
-}
-
-// This function should (hopefully) return the correct mutliaddr for connecting to this peer.
-function getMultiaddr (thisIpfsInfo) {
-  let addresses = thisIpfsInfo.addresses
-  addresses = addresses.filter(x => x.indexOf('p2p-circuit') === -1)
-  addresses = addresses.filter(x => x.indexOf('127.0.0.1') === -1)
-  const last = addresses.length - 1
-  return addresses[last]
 }
 
 // export default app

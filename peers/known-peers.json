@@ -1,3 +1,6 @@
 {
-  "knownServers": []
+  "seenServers": [],
+  "verifiedServers": [],
+  "seenPeers": [],
+  "verifiedPeers": []
 }
