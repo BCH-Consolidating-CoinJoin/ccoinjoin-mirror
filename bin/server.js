@@ -84,13 +84,13 @@ async function startServer () {
 
   // Determine the IPFS ID for use with the /ipfsid endpoint.
   const thisIpfsInfo = await network.ipfs.id()
-  console.log(`thisIpfsInfo: ${util.inspect(thisIpfsInfo)}`)
+  // console.log(`thisIpfsInfo: ${util.inspect(thisIpfsInfo)}`)
   const multiaddr = getMultiaddr(thisIpfsInfo)
-  console.log(`multiaddr: ${multiaddr}`)
 
   const ipfsId = thisIpfsInfo.id
   process.env.IPFS_ID = ipfsId
   console.log(`IPFS ID: ${ipfsId}`)
+  console.log(`multiaddr: ${multiaddr}`)
 
   // Add all bootstrap peers to the IPFS swarm.
   for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
