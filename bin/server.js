@@ -122,9 +122,19 @@ async function startServer () {
 
       // await network.writeDB(serverConfig)
 
+      // Broadcast server information onto the network.
+      const writeHash = await network.writeDB(p2p.ipfsData)
+      console.log(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
+      console.log(`writeHash: ${writeHash}`)
+
+      // Generate an array of all peers on the network.
       let latest = await network.readDB()
-      const servers = getUniquePeers(latest)
-      console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
+      let peerHashs = getUniquePeers(latest)
+      peerHashs = peerHashs.filter(x => x !== null && x !== undefined)
+      console.log(`peerHashs: ${JSON.stringify(peerHashs, null, 2)}`)
+
+      // validate peers
+      p2p.validatePeers(peerHashs)
     }, UPDATE_PERIOD)
   }
 

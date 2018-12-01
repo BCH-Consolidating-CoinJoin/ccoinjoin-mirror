@@ -145,6 +145,24 @@ class P2P {
       })
     })
   }
+
+  // Compare an array of peer hashes from OrbitDB with this nodes internal
+  // verifiedPeers list.
+  async validatePeers (peerArray) {
+    // Remove this nodes hash from the peerArray hash.
+
+    // Remove any nodes from the list that are already verified.
+
+    // Loop through the leftover peers.
+    for (var i = 0; i < 1; i++) {
+      // Connect to the peer
+
+      // If connection is successful, add that peer to the validatedPeers list.
+
+    }
+
+    // Save the list.
+  }
 }
 
 module.exports = P2P
