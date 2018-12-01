@@ -7,6 +7,16 @@
 
 const fs = require('fs')
 const ccoinjoinBootstrap = require('../../peers/ccoinjoin-bootstrap.json')
+const config = require('../../config')
+
+const util = require('util')
+util.inspect.defaultOptions = { depth: 1 }
+
+// Load the ccoinjoin-network library.
+// const Network = require('../../ccoinjoin-network')
+const Network = require('ccoinjoin-network')
+const network = new Network()
+const UPDATE_PERIOD = 1000 * 60 // 1 minute
 
 class P2P {
   constructor (network) {
@@ -18,6 +28,8 @@ class P2P {
     }
 
     this.knownPeers = this.openKnownPeers()
+
+    this.ipfsData = config.ipfsData
   }
 
   // Attempt to connect to all peers in the knownPeers.verifiedPeers list.
@@ -29,6 +41,10 @@ class P2P {
     this.id.hash = thisIpfsInfo.id
     this.id.multiaddr = this.getMultiaddr(thisIpfsInfo)
 
+    // Not sure which redundunt objects I'll use in the future.
+    this.ipfsData.peerHash = this.id.hash
+    this.ipfsData.multiaddr = this.id.multiaddr
+
     console.log(`IPFS ID: ${this.id.hash}`)
     console.log(`multiaddr: ${this.id.multiaddr}`)
 
@@ -37,6 +53,21 @@ class P2P {
 
     // Connect to all previously seen peers
     await this.connectToVerifiedPeers()
+
+    // Connect to the OrbitDB.
+    // await network.connectToOrbitDB(ccoinjoinBootstrap.dbAddress)
+
+    // Add this nodes IPFS connection information to the OrbitDB.
+    // await this.broadcastMyPeerInfo()
+  }
+
+  // Broadcasts the IPFS peer information for this peer to the network.
+  async broadcastMyPeerInfo () {
+    // Construct the server information DB entry
+    const now = new Date()
+
+    this.ipfsData.timestamp = now.toISOString()
+    this.ipfsData.localTimestamp = now.toLocaleString()
   }
 
   // Connects to all peers listed in the knownPeers.verifiedPeers array.
