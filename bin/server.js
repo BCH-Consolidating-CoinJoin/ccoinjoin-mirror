@@ -95,35 +95,37 @@ async function startServer () {
   console.log(`Server started on ${config.port}`)
   wlogger.info(`Server started on ${config.port}`)
 
+  if (process.env.COINJOIN_ENV !== 'test') {
   // Connect to the IPFS network and subscribe to the DB.
-  await network.connectToIPFS()
+    await network.connectToIPFS()
 
-  // Initialze the P2P library
-  const p2p = new P2P(network)
+    // Initialze the P2P library
+    const p2p = new P2P(network)
 
-  // Connect to the known peers
-  await p2p.connectToPeers()
+    // Connect to the known peers
+    await p2p.connectToPeers()
 
-  // Connect to the Consolidating CoinJoin OrbitDB.
-  await network.connectToOrbitDB(config.orbitDBAddr)
+    // Connect to the Consolidating CoinJoin OrbitDB.
+    await network.connectToOrbitDB(config.orbitDBAddr)
 
-  // Broadcast server information onto the network.
-  await network.writeDB(p2p.ipfsData)
-  console.log(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
+    // Broadcast server information onto the network.
+    await network.writeDB(p2p.ipfsData)
+    console.log(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
 
-  // Create a timer that periodically updates the server information on the DB.
-  setInterval(async function () {
-    console.log(`DB has synced: ${network.dbHasSynced}`)
+    // Create a timer that periodically updates the server information on the DB.
+    setInterval(async function () {
+      console.log(`DB has synced: ${network.dbHasSynced}`)
 
-    const peers = await network.ipfs.swarm.peers()
-    console.log(`peers: ${peers.length}`)
+      const peers = await network.ipfs.swarm.peers()
+      console.log(`peers: ${peers.length}`)
 
-    // await network.writeDB(serverConfig)
+      // await network.writeDB(serverConfig)
 
-    let latest = await network.readDB()
-    const servers = getUniquePeers(latest)
-    console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
-  }, UPDATE_PERIOD)
+      let latest = await network.readDB()
+      const servers = getUniquePeers(latest)
+      console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
+    }, UPDATE_PERIOD)
+  }
 
   return app
 }
