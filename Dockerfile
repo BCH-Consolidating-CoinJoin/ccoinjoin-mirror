@@ -21,9 +21,6 @@ RUN chown -R coinjoin .npm-global
 RUN echo "export PATH=~/.npm-global/bin:$PATH" >> /home/coinjoin/.profile
 RUN runuser -l coinjoin -c "npm config set prefix '~/.npm-global'"
 
-# Expose the port the API will be served on.
-EXPOSE 5000
-
 # Switch to user account.
 USER coinjoin
 # Prep 'sudo' commands.
@@ -31,11 +28,11 @@ RUN echo 'password' | sudo -S pwd
 
 # Clone the rest.bitcoin.com repository
 WORKDIR /home/coinjoin
-RUN git clone https://github.com/BCH-Consolidating-CoinJoin/ccoinjoin-server
+RUN git clone https://github.com/BCH-Consolidating-CoinJoin/ccoinjoin-mirror
 
 # Switch to the desired branch. `master` is usually stable,
 # and `stage` has the most up-to-date changes.
-WORKDIR /home/coinjoin/ccoinjoin-server
+WORKDIR /home/coinjoin/ccoinjoin-mirror
 
 # For development: switch to unstable branch
 RUN git checkout unstable
@@ -43,11 +40,16 @@ RUN git checkout unstable
 # Install dependencies
 RUN npm install
 
-VOLUME /home/coinjoin/ccoinjoin-server/logs
+VOLUME /home/coinjoin/ccoinjoin-mirror/logs
+
+# Expose the port the API will be served on.
+EXPOSE 4001
+EXPOSE 4002
+EXPOSE 4003
+EXPOSE 5000
 
 # Start the application.
 COPY start-production start-production
-COPY make-keys-dir-readable make-keys-dir-readable
 CMD ["./start-production"]
 
 #CMD ["npm", "start"]

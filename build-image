@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t ccoinjoin .
+docker build -t ccoinjoin-mirror .

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Run the insight-bch Docker image
-docker container run --name ccoinjoin -d -p 5000:5000 ccoinjoin
+docker container run --name ccoinjoin-mirror -d -p 5000:5000 -p 4001:4001 -p 4002:4002 -p 4003:4003 ccoinjoin-mirror
