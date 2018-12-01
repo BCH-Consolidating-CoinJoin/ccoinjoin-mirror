@@ -109,8 +109,9 @@ async function startServer () {
     await network.connectToOrbitDB(config.orbitDBAddr)
 
     // Broadcast server information onto the network.
-    await network.writeDB(p2p.ipfsData)
+    const writeHash = await network.writeDB(p2p.ipfsData)
     console.log(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
+    console.log(`writeHash: ${writeHash}`)
 
     // Create a timer that periodically updates the server information on the DB.
     setInterval(async function () {
