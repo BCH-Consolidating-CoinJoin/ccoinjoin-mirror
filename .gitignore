@@ -64,4 +64,4 @@ wallets/*.json
 database/
 keys/
 orbitdb/
-known-peers.json
+peers/known-peers.json
