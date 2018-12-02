@@ -72,7 +72,7 @@ async function startServer () {
   wlogger.info(`Server started on ${config.port}`)
 
   if (process.env.COINJOIN_ENV !== 'test') {
-  // Connect to the IPFS network and subscribe to the DB.
+    // Connect to the IPFS network and subscribe to the DB.
     await network.connectToIPFS()
 
     // Initialze the P2P library
@@ -91,7 +91,8 @@ async function startServer () {
 
     // Create a timer that periodically updates the server information on the DB.
     setInterval(async function () {
-      console.log(`DB has synced: ${network.dbHasSynced}`)
+      wlogger.silly(`Starting interval.`)
+      wlogger.silly(`DB has synced: ${network.dbHasSynced}`)
 
       const peers = await network.ipfs.swarm.peers()
       console.log(`peers: ${peers.length}`)
