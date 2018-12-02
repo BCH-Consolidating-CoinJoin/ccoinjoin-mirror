@@ -1,0 +1,5 @@
+freeze = update-index --assume-unchanged
+thaw = update-index --no-assume-unchanged
+
+git freeze peers/known-peers.json
+#git thaw foo.rb
