@@ -10,7 +10,7 @@ const ccoinjoinBootstrap = require('../../peers/ccoinjoin-bootstrap.json')
 const config = require('../../config')
 
 const util = require('util')
-util.inspect.defaultOptions = { depth: 1 }
+util.inspect.defaultOptions = { depth: 3 }
 
 // Load the ccoinjoin-network library.
 // const Network = require('../../ccoinjoin-network')
@@ -51,6 +51,8 @@ class P2P {
     // Connect to all bootstrap peers
     await this.connectToBootstrapPeers()
 
+    await sleep(10000)
+
     // Connect to all previously seen peers
     await this.connectToVerifiedPeers()
 
@@ -72,18 +74,28 @@ class P2P {
 
   // Connects to all peers listed in the knownPeers.verifiedPeers array.
   async connectToVerifiedPeers () {
+    // For now, using the first bootstrap peer to form a circuit relay. This
+    // needs to be improved.
+    const circRelay = ccoinjoinBootstrap.bootstrapPeers[0]
+
     const verifiedPeers = this.knownPeers.verifiedPeers
+
     for (var i = 0; i < verifiedPeers.length; i++) {
       const thisPeer = verifiedPeers[i]
 
       // Prevent the node from trying to connect to itself.
       if (thisPeer.indexOf(this.id.hash) === -1) {
         try {
-          console.log(`Connecting to IPFS peer: ${thisPeer}`)
+          // Generate the circuit-relay mutliaddr
+          // const crAddr = `${circRelay}/p2p-circuit/ipfs/${thisPeer}`
+          const crAddr = `/p2p-circuit/ipfs/${thisPeer}`
+
+          console.log(`Connecting to IPFS peer: ${crAddr}`)
           // Connect to the bootstrap peers
-          await this.ipfs.swarm.connect(thisPeer)
+          await this.ipfs.swarm.connect(crAddr)
         } catch (err) {
-          console.log(`Error connecting to peer.`)
+          // console.log(`Error connecting to peer: `, err)
+          console.log(`Error connecting to peer ${thisPeer}`)
         }
       }
     }
@@ -134,7 +146,7 @@ class P2P {
 
   // Save data to known-peers.json
   saveKnownPeers (data) {
-    const filename = '../../peers/known-peers.json'
+    const filename = `${__dirname}/../../peers/known-peers.json`
 
     return new Promise((resolve, reject) => {
       fs.writeFile(filename, JSON.stringify(data, null, 2), function (err) {
@@ -166,15 +178,32 @@ class P2P {
     console.log(`peers after removing verified peers: ${JSON.stringify(peers, null, 2)}`)
 
     // Loop through the leftover peers.
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < peers.length; i++) {
+      const thisPeer = peers[i]
+
+      // Generate the circuit-relay mutliaddr
+      const crAddr = `/p2p-circuit/ipfs/${thisPeer}`
+
       // Connect to the peer
+      try {
+        await this.ipfs.swarm.connect(crAddr)
+        console.log(`Connected to peer ${thisPeer}.`)
+      } catch (err) {
+        console.log(`Could not connect to peer ${crAddr}`)
+        continue
+      }
 
       // If connection is successful, add that peer to the validatedPeers list.
-
+      this.knownPeers.verifiedPeers.push(thisPeer)
     }
 
     // Save the list.
+    await this.saveKnownPeers(this.knownPeers)
   }
+}
+
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 module.exports = P2P
