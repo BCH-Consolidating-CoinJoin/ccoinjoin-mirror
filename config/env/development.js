@@ -10,7 +10,7 @@ module.exports = {
   session: 'secret-boilerplate-token',
   token: 'secret-jwt-token',
   database: 'mongodb://localhost:27017/coinjoin-dev',
-  port: 67890,
+  port: 47890,
   ipfsData: {
     peerHash: '',
     multiaddr: '',
