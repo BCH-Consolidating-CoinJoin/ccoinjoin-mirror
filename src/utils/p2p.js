@@ -149,9 +149,21 @@ class P2P {
   // Compare an array of peer hashes from OrbitDB with this nodes internal
   // verifiedPeers list.
   async validatePeers (peerArray) {
+    console.log(`peerArray: ${JSON.stringify(peerArray, null, 2)}`)
+
     // Remove this nodes hash from the peerArray hash.
+    const myHash = this.id.hash
+    let peers = peerArray.filter(x => x !== myHash)
+    console.log(`peerArray with my hash removed: ${JSON.stringify(peers, null, 2)}`)
+
+    // Remove any nodes from the bootstrap list.
+    // https://stackoverflow.com/questions/19957348/javascript-arrays-remove-all-elements-contained-in-another-array
+    peers = peers.filter(el => !ccoinjoinBootstrap.bootstrapHashs.includes(el))
+    console.log(`peers after removing bootstrap hashes: ${JSON.stringify(peers, null, 2)}`)
 
     // Remove any nodes from the list that are already verified.
+    peers = peers.filter(el => !this.knownPeers.verifiedPeers.includes(el))
+    console.log(`peers after removing verified peers: ${JSON.stringify(peers, null, 2)}`)
 
     // Loop through the leftover peers.
     for (var i = 0; i < 1; i++) {

@@ -131,7 +131,7 @@ async function startServer () {
       let latest = await network.readDB()
       let peerHashs = getUniquePeers(latest)
       peerHashs = peerHashs.filter(x => x !== null && x !== undefined)
-      console.log(`peerHashs: ${JSON.stringify(peerHashs, null, 2)}`)
+      // console.log(`peerHashs: ${JSON.stringify(peerHashs, null, 2)}`)
 
       // validate peers
       p2p.validatePeers(peerHashs)
