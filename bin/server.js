@@ -86,8 +86,8 @@ async function startServer () {
 
     // Broadcast server information onto the network.
     const writeHash = await network.writeDB(p2p.ipfsData)
-    console.log(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
-    console.log(`writeHash: ${writeHash}`)
+    wlogger.silly(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
+    wlogger.silly(`writeHash: ${writeHash}`)
 
     // Create a timer that periodically updates the server information on the DB.
     setInterval(async function () {
@@ -95,47 +95,21 @@ async function startServer () {
       wlogger.silly(`DB has synced: ${network.dbHasSynced}`)
 
       const peers = await network.ipfs.swarm.peers()
-      console.log(`peers: ${peers.length}`)
-
-      // await network.writeDB(serverConfig)
+      wlogger.silly(`peers: ${peers.length}`)
 
       // Broadcast server information onto the network.
       const writeHash = await network.writeDB(p2p.ipfsData)
-      console.log(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
-      console.log(`writeHash: ${writeHash}`)
+      wlogger.silly(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
+      wlogger.silly(`writeHash: ${writeHash}`)
 
-      // Generate an array of all peers on the network.
-      let latest = await network.readDB()
-      let peerHashs = getUniquePeers(latest)
-      peerHashs = peerHashs.filter(x => x !== null && x !== undefined)
-      // console.log(`peerHashs: ${JSON.stringify(peerHashs, null, 2)}`)
-
-      // validate peers
-      p2p.validatePeers(peerHashs)
+      // Find and validate peers
+      p2p.validatePeers()
     }, UPDATE_PERIOD)
   }
 
   return app
 }
 // startServer()
-
-// Gets the mutliaddr for unique peers
-function getUniquePeers (dbRawData) {
-  const payloads = dbRawData.map(entry => entry.payload.value)
-  // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
-
-  const peers = payloads.map(entry => entry.peerHash)
-  // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
-
-  const uniquePeers = peers.filter(getUnique)
-  return uniquePeers
-}
-
-// A filter function for identifying unique entries.
-// https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
-function getUnique (value, index, self) {
-  return self.indexOf(value) === index
-}
 
 // export default app
 // module.exports = app

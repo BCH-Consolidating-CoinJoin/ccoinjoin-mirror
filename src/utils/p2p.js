@@ -26,6 +26,7 @@ class P2P {
 
       this.ipfs = network.ipfs
       this.db = network.db
+      this.network = network
       this.id = {
         hash: '',
         multiaddr: ''
@@ -172,10 +173,10 @@ class P2P {
 
   // Open and read known-peers.json
   openKnownPeers () {
+    const filename = '../../peers/known-peers.json'
+
     try {
       wlogger.silly(`entering p2p.js openKnownPeers().`)
-
-      const filename = '../../peers/known-peers.json'
 
       // Delete the cached copy of the wallet. This allows testing of list-wallets.
       delete require.cache[require.resolve(filename)]
@@ -211,9 +212,15 @@ class P2P {
 
   // Compare an array of peer hashes from OrbitDB with this nodes internal
   // verifiedPeers list.
-  async validatePeers (peerArray) {
+  async validatePeers () {
     try {
       wlogger.silly(`entering p2p.js validatePeers().`)
+
+      // Generate an array of all peers on the network.
+      let latest = await this.network.readDB()
+      let peerArray = this.getUniquePeers(latest)
+      peerArray = peerArray.filter(x => x !== null && x !== undefined)
+      // console.log(`peerHashs: ${JSON.stringify(peerHashs, null, 2)}`)
 
       console.log(`peerArray: ${JSON.stringify(peerArray, null, 2)}`)
 
@@ -257,6 +264,24 @@ class P2P {
       wlogger.debug(`Error in p2p.js/validatePeers()`, err)
       throw err
     }
+  }
+
+  // Gets the mutliaddr for unique peers
+  getUniquePeers (dbRawData) {
+    const payloads = dbRawData.map(entry => entry.payload.value)
+    // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
+
+    const peers = payloads.map(entry => entry.peerHash)
+    // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
+
+    const uniquePeers = peers.filter(this.getUnique)
+    return uniquePeers
+  }
+
+  // A filter function for identifying unique entries.
+  // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+  getUnique (value, index, self) {
+    return self.indexOf(value) === index
   }
 }
 
