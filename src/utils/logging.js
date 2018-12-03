@@ -12,7 +12,7 @@ require('winston-daily-rotate-file')
 // Configure daily-rotation transport.
 const transport = new (winston.transports.DailyRotateFile)({
   filename: `${__dirname}/../../logs/coinjoin-%DATE%.log`,
-  datePattern: 'YYYY-MM-DD-HH',
+  datePattern: 'YYYY-MM-DD',
   zippedArchive: false,
   maxSize: '1m',
   maxFiles: '14d',
@@ -26,7 +26,7 @@ transport.on('rotate', function (oldFilename, newFilename) {
 })
 
 const wlogger = winston.createLogger({
-  level: 'debug',
+  level: 'silly',
   format: winston.format.json(),
   transports: [
     //
@@ -43,7 +43,7 @@ const wlogger = winston.createLogger({
 if (process.env.COINJOIN_ENV !== 'test') {
   wlogger.add(new winston.transports.Console({
     format: winston.format.simple(),
-    level: 'info'
+    level: 'silly'
   }))
 }
 

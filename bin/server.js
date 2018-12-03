@@ -19,9 +19,6 @@ const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const convert = require('koa-convert')
 const logger = require('koa-logger')
-const mongoose = require('mongoose')
-const session = require('koa-generic-session')
-const passport = require('koa-passport')
 const mount = require('koa-mount')
 const serve = require('koa-static')
 const cors = require('kcors')
@@ -49,35 +46,14 @@ async function startServer () {
   const app = new Koa()
   app.keys = [config.session]
 
-  // Connect to the Mongo Database.
-  mongoose.Promise = global.Promise
-  await mongoose.connect(
-    config.database,
-    { useNewUrlParser: true }
-  )
-  mongoose.set('useCreateIndex', true) // Stop deprecation warning.
-
-  // Wipe the database on startup.
-  for (const collection in mongoose.connection.collections) {
-    if (mongoose.connection.collections.hasOwnProperty(collection)) {
-      mongoose.connection.collections[collection].deleteMany()
-    }
-  }
-
   // MIDDLEWARE START
 
   app.use(convert(logger()))
   app.use(bodyParser())
-  app.use(session())
   app.use(errorMiddleware())
 
   // Used to generate the docs.
   app.use(convert(mount('/docs', serve(`${process.cwd()}/docs`))))
-
-  // User Authentication
-  require('../config/passport')
-  app.use(passport.initialize())
-  app.use(passport.session())
 
   // Custom Middleware Modules
   const modules = require('../src/modules')
@@ -96,7 +72,7 @@ async function startServer () {
   wlogger.info(`Server started on ${config.port}`)
 
   if (process.env.COINJOIN_ENV !== 'test') {
-  // Connect to the IPFS network and subscribe to the DB.
+    // Connect to the IPFS network and subscribe to the DB.
     await network.connectToIPFS()
 
     // Initialze the P2P library
@@ -110,45 +86,30 @@ async function startServer () {
 
     // Broadcast server information onto the network.
     const writeHash = await network.writeDB(p2p.ipfsData)
-    console.log(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
-    console.log(`writeHash: ${writeHash}`)
+    wlogger.silly(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
+    wlogger.silly(`writeHash: ${writeHash}`)
 
     // Create a timer that periodically updates the server information on the DB.
     setInterval(async function () {
-      console.log(`DB has synced: ${network.dbHasSynced}`)
+      wlogger.silly(`Starting interval.`)
+      wlogger.silly(`DB has synced: ${network.dbHasSynced}`)
 
       const peers = await network.ipfs.swarm.peers()
-      console.log(`peers: ${peers.length}`)
+      wlogger.silly(`peers: ${peers.length}`)
 
-      // await network.writeDB(serverConfig)
+      // Broadcast server information onto the network.
+      const writeHash = await network.writeDB(p2p.ipfsData)
+      wlogger.silly(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
+      wlogger.silly(`writeHash: ${writeHash}`)
 
-      let latest = await network.readDB()
-      const servers = getUniquePeers(latest)
-      console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
+      // Find and validate peers
+      p2p.validatePeers()
     }, UPDATE_PERIOD)
   }
 
   return app
 }
 // startServer()
-
-// Gets the mutliaddr for unique peers
-function getUniquePeers (dbRawData) {
-  const payloads = dbRawData.map(entry => entry.payload.value)
-  // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
-
-  const peers = payloads.map(entry => entry.peerHash)
-  // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
-
-  const uniquePeers = peers.filter(getUnique)
-  return uniquePeers
-}
-
-// A filter function for identifying unique entries.
-// https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
-function getUnique (value, index, self) {
-  return self.indexOf(value) === index
-}
 
 // export default app
 // module.exports = app
