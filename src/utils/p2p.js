@@ -8,6 +8,8 @@
 const fs = require('fs')
 const wlogger = require('../../src/utils/logging')
 
+const KNOWN_PEERS = `${__dirname}/../../peers/known-peers.json`
+
 // Load the boostrap peer list. This is used to initialize the P2P network.
 // This is a list mirror servers dedicated to supporting the CCoinJoin network
 // over the long term.
@@ -35,7 +37,7 @@ class P2P {
       }
 
       // Open the known-peers file with saved peer information.
-      this.knownPeers = this.openKnownPeers()
+      this.knownPeers = this.openKnownPeers(KNOWN_PEERS)
 
       // Load the config data for this IPFS peer.
       this.ipfsData = config.ipfsData
@@ -75,8 +77,8 @@ class P2P {
       // Connect to the OrbitDB.
       // await network.connectToOrbitDB(ccoinjoinBootstrap.dbAddress)
 
-    // Add this nodes IPFS connection information to the OrbitDB.
-    // await this.broadcastMyPeerInfo()
+      // Add this nodes IPFS connection information to the OrbitDB.
+      // await this.broadcastMyPeerInfo()
     } catch (err) {
       wlogger.debug(`Error in p2p.js/connectToPeers()`, err)
       throw err
@@ -176,8 +178,8 @@ class P2P {
   }
 
   // Open and read known-peers.json
-  openKnownPeers () {
-    const filename = '../../peers/known-peers.json'
+  openKnownPeers (filename) {
+    // const filename = '../../peers/known-peers.json'
 
     try {
       wlogger.silly(`entering p2p.js openKnownPeers().`)
