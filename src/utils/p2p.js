@@ -25,14 +25,19 @@ class P2P {
     try {
       wlogger.silly(`entering P2P constructor.`)
 
+      // Locally store the network object.
       this.network = network
+
+      // Contains identification information for this peer.
       this.id = {
         hash: '',
         multiaddr: ''
       }
 
+      // Open the known-peers file with saved peer information.
       this.knownPeers = this.openKnownPeers()
 
+      // Load the config data for this IPFS peer.
       this.ipfsData = config.ipfsData
     } catch (err) {
       wlogger.debug(`Error in p2p.js/constructor()`, err)
