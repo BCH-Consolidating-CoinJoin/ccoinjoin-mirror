@@ -6,26 +6,25 @@
 'use strict'
 
 const fs = require('fs')
-const ccoinjoinBootstrap = require('../../peers/ccoinjoin-bootstrap.json')
-const config = require('../../config')
 const wlogger = require('../../src/utils/logging')
 
-const util = require('util')
-util.inspect.defaultOptions = { depth: 3 }
+// Load the boostrap peer list. This is used to initialize the P2P network.
+// This is a list mirror servers dedicated to supporting the CCoinJoin network
+// over the long term.
+const ccoinjoinBootstrap = require('../../peers/ccoinjoin-bootstrap.json')
 
-// Load the ccoinjoin-network library.
-// const Network = require('../../ccoinjoin-network')
-const Network = require('ccoinjoin-network')
-const network = new Network()
-const UPDATE_PERIOD = 1000 * 60 // 1 minute
+// Load the server config file.
+const config = require('../../config')
+
+// Used for debugging.
+const util = require('util')
+util.inspect.defaultOptions = { depth: 1 }
 
 class P2P {
   constructor (network) {
     try {
       wlogger.silly(`entering P2P constructor.`)
 
-      this.ipfs = network.ipfs
-      this.db = network.db
       this.network = network
       this.id = {
         hash: '',
@@ -47,7 +46,7 @@ class P2P {
       wlogger.silly(`entering p2p.js connectToPeers().`)
 
       // Determine the IPFS ID for use with the /ipfsid endpoint.
-      const thisIpfsInfo = await this.ipfs.id()
+      const thisIpfsInfo = await this.network.ipfs.id()
       // console.log(`thisIpfsInfo: ${util.inspect(thisIpfsInfo)}`)
 
       this.id.hash = thisIpfsInfo.id
@@ -116,7 +115,7 @@ class P2P {
 
             console.log(`Connecting to IPFS peer: ${crAddr}`)
             // Connect to the bootstrap peers
-            await this.ipfs.swarm.connect(crAddr)
+            await this.network.ipfs.swarm.connect(crAddr)
           } catch (err) {
           // console.log(`Error connecting to peer: `, err)
             console.log(`Error connecting to peer ${thisPeer}`)
@@ -142,7 +141,7 @@ class P2P {
           try {
             console.log(`Connecting to IPFS peer: ${thisPeer}`)
             // Connect to the bootstrap peers
-            await this.ipfs.swarm.connect(thisPeer)
+            await this.network.ipfs.swarm.connect(thisPeer)
           } catch (err) {
             console.log(`Error connecting to peer.`)
           }
@@ -198,7 +197,12 @@ class P2P {
 
       return new Promise((resolve, reject) => {
         fs.writeFile(filename, JSON.stringify(data, null, 2), function (err) {
-          if (err) return reject(err)
+          if (err) {
+            wlogger.error(`Error in p2p.js/saveKnownPeers(): `, err)
+            return reject(err)
+          }
+
+          wlogger.silly(`Successfully saved to known-peers.json`)
 
           // console.log(`${name}.json written successfully.`)
           return resolve()
@@ -247,7 +251,7 @@ class P2P {
 
         // Connect to the peer
         try {
-          await this.ipfs.swarm.connect(crAddr)
+          await this.network.ipfs.swarm.connect(crAddr)
           console.log(`Connected to peer ${thisPeer}.`)
         } catch (err) {
           console.log(`Could not connect to peer ${crAddr}`)
@@ -268,14 +272,20 @@ class P2P {
 
   // Gets the mutliaddr for unique peers
   getUniquePeers (dbRawData) {
-    const payloads = dbRawData.map(entry => entry.payload.value)
-    // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
+    try {
+      wlogger.silly(`entering p2p.js getUniquePeers().`)
+      const payloads = dbRawData.map(entry => entry.payload.value)
+      // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
 
-    const peers = payloads.map(entry => entry.peerHash)
-    // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
+      const peers = payloads.map(entry => entry.peerHash)
+      // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
 
-    const uniquePeers = peers.filter(this.getUnique)
-    return uniquePeers
+      const uniquePeers = peers.filter(this.getUnique)
+      return uniquePeers
+    } catch (err) {
+      wlogger.debug(`Error in p2p.js/getUniquePeers()`, err)
+      throw err
+    }
   }
 
   // A filter function for identifying unique entries.
