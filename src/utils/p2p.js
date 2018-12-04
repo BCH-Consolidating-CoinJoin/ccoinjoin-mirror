@@ -20,7 +20,7 @@ const config = require('../../config')
 
 // Used for debugging.
 const util = require('util')
-util.inspect.defaultOptions = { depth: 1 }
+util.inspect.defaultOptions = { depth: 5 }
 
 class P2P {
   constructor (network) {
@@ -229,6 +229,13 @@ class P2P {
 
       // Generate an array of all peers on the network.
       let latest = await this.network.readDB()
+      /*
+      const temp = []
+      temp.push(latest[0])
+      temp.push(latest[1])
+      temp.push(latest[2])
+      console.log(`temp: ${JSON.stringify(temp, null, 2)}`)
+*/
       let peerArray = this.getUniquePeers(latest)
       peerArray = peerArray.filter(x => x !== null && x !== undefined)
       // console.log(`peerHashs: ${JSON.stringify(peerHashs, null, 2)}`)
@@ -281,13 +288,19 @@ class P2P {
   getUniquePeers (dbRawData) {
     try {
       wlogger.silly(`entering p2p.js getUniquePeers().`)
+
+      // Get only the payload data from the raw DB JSON.
       const payloads = dbRawData.map(entry => entry.payload.value)
       // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
 
+      // Get only the peer hash field of each DB entry.
       const peers = payloads.map(entry => entry.peerHash)
       // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
 
+      // Filter out duplicate entries.
       const uniquePeers = peers.filter(this.getUnique)
+
+      // Return the unique peer hashes.
       return uniquePeers
     } catch (err) {
       wlogger.debug(`Error in p2p.js/getUniquePeers()`, err)

@@ -10,6 +10,7 @@ util.inspect.defaultOptions = { depth: 1 }
 
 // Mocking libraries
 const Network = require('./mocks/network-mock')
+const mockOrbitData = require('./mocks/orbitdb-mock')
 
 // File under test.
 const P2P = require('../../src/utils/p2p')
@@ -79,6 +80,16 @@ describe('p2p.js', () => {
       data2.seenServers = cleanData
       await p2p.saveKnownPeers(data2)
       // console.log(`data2: ${util.inspect(data2)}`)
+    })
+  })
+
+  describe('getUniquePeers', () => {
+    it('should get unique peer hash from redundent database entries', async () => {
+      const peerArray = p2p.getUniquePeers(mockOrbitData.mockLatestData)
+      // console.log(`peerArray: ${util.inspect(peerArray)}`)
+
+      assert.isArray(peerArray)
+      assert.equal(peerArray[0], 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm')
     })
   })
 })
