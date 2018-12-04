@@ -265,6 +265,37 @@ const mockLatestData = [
   }
 ]
 
+const mockIpfsInfoNoExternal = {
+  'id': 'QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+  'publicKey': 'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCAa5Zevgv51ctXKREokKjJ4VcsgciqSJxeDBjwIBubqS2YAJSoSm0vkzOXS7dpwtRhrO4s2zHxrykPxyUao7Esq3G6fQsykPoqmISWo1FB5uR25MuaiZ/63XXFwE7/72IbBQxflTFI1s9x8Ie7BVPE6lfgqUD8i1NrII7HrQaoZ+L0rGSBsq/EHjJhlKM8/16vPM8c0JGS+cjxjuLUH4Ip/L66RRv65D4ucopQnogGNzHAmypGgFSvc0lzeh6lWI/2Ftf/PBUg6IHQ9JtKbeWaqaRJDI5vYLsNp3HJ3UMkr6DJ2j2c+Lqtf5RIuMyIxsZPTJoixKh8tc77OId7czrVAgMBAAE=',
+  'addresses': [
+    '/ip4/127.0.0.1/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/p2p-circuit/ip4/0.0.0.0/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/p2p-circuit/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/p2p-circuit/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67'
+  ],
+  'agentVersion': 'js-ipfs/0.33.1',
+  'protocolVersion': '9000'
+}
+
+const mockIpfsInfoWithExternal = {
+  'id': 'QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+  'publicKey': 'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCAa5Zevgv51ctXKREokKjJ4VcsgciqSJxeDBjwIBubqS2YAJSoSm0vkzOXS7dpwtRhrO4s2zHxrykPxyUao7Esq3G6fQsykPoqmISWo1FB5uR25MuaiZ/63XXFwE7/72IbBQxflTFI1s9x8Ie7BVPE6lfgqUD8i1NrII7HrQaoZ+L0rGSBsq/EHjJhlKM8/16vPM8c0JGS+cjxjuLUH4Ip/L66RRv65D4ucopQnogGNzHAmypGgFSvc0lzeh6lWI/2Ftf/PBUg6IHQ9JtKbeWaqaRJDI5vYLsNp3HJ3UMkr6DJ2j2c+Lqtf5RIuMyIxsZPTJoixKh8tc77OId7czrVAgMBAAE=',
+  'addresses': [
+    '/ip4/127.0.0.1/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/ip4/10.10.10.119/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/p2p-circuit/ip4/0.0.0.0/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/p2p-circuit/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+    '/p2p-circuit/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67'
+  ],
+  'agentVersion': 'js-ipfs/0.33.1',
+  'protocolVersion': '9000'
+}
+
 module.exports = {
-  mockLatestData
+  mockLatestData,
+  mockIpfsInfoNoExternal,
+  mockIpfsInfoWithExternal
 }

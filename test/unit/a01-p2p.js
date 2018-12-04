@@ -1,4 +1,8 @@
 /*
+  Unit tests for the p2p.js library.
+
+  TODO:
+
 */
 
 'use strict'
@@ -90,6 +94,24 @@ describe('p2p.js', () => {
 
       assert.isArray(peerArray)
       assert.equal(peerArray[0], 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm')
+    })
+  })
+
+  describe('getMultiaddr', () => {
+    it('should return an empty string if no external multiaddr is generated.', () => {
+      const multiaddr = p2p.getMultiaddr(mockOrbitData.mockIpfsInfoNoExternal)
+      // console.log(`multiaddr: ${util.inspect(multiaddr)}`)
+
+      assert.isString(multiaddr)
+      assert.equal(multiaddr, '')
+    })
+
+    it('should return an external multiaddr', () => {
+      const multiaddr = p2p.getMultiaddr(mockOrbitData.mockIpfsInfoWithExternal)
+      // console.log(`multiaddr: ${util.inspect(multiaddr)}`)
+
+      assert.isString(multiaddr)
+      assert.equal(multiaddr, '/ip4/10.10.10.119/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67')
     })
   })
 })

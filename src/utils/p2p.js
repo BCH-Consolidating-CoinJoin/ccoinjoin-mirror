@@ -160,7 +160,8 @@ class P2P {
     }
   }
 
-  // This function should (hopefullreturn the correct mutliaddr for connecting to this peer.
+  // This function should (hopefully) return the correct mutliaddr for
+  // connecting to this peer.
   getMultiaddr (thisIpfsInfo) {
     try {
       wlogger.silly(`entering p2p.js getMultiaddr().`)
@@ -168,8 +169,11 @@ class P2P {
       let addresses = thisIpfsInfo.addresses
       addresses = addresses.filter(x => x.indexOf('p2p-circuit') === -1)
       addresses = addresses.filter(x => x.indexOf('127.0.0.1') === -1)
-      const last = addresses.length - 1
 
+      // Return an empty string if no external multiaddr is generated.
+      if (addresses.length === 0) return ''
+
+      const last = addresses.length - 1
       return addresses[last]
     } catch (err) {
       wlogger.debug(`Error in p2p.js/getMultiaddr()`, err)
@@ -284,7 +288,7 @@ class P2P {
     }
   }
 
-  // Gets the mutliaddr for unique peers
+  // Process raw data from OrbitDB and return an array of unique peer hashs.
   getUniquePeers (dbRawData) {
     try {
       wlogger.silly(`entering p2p.js getUniquePeers().`)
