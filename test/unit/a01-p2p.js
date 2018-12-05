@@ -148,6 +148,7 @@ describe('p2p.js', () => {
       try {
         // Mock the verified peers.
         p2p.knownPeers.verifiedPeers = mockOrbitData.mockVerifiedPeers
+        p2p.id.hash = 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm'
 
         await p2p.connectToVerifiedPeers()
 
