@@ -177,9 +177,15 @@ describe('p2p.js', () => {
 
   describe('validatePeers', () => {
     it('should validate peers.', async () => {
-      // p2p.network.readDB =
-      // mockOrbitData.mockLatestData
-      await p2p.validatePeers()
+      try {
+        await p2p.validatePeers()
+
+        // The function returning without an error is considered a pass.
+        assert.equal(true, true, 'validatePeers failed')
+      } catch (err) {
+        console.log(`validatePeers failed.`)
+        assert.equal(true, false, 'validatePeers failed')
+      }
     })
   })
 })
