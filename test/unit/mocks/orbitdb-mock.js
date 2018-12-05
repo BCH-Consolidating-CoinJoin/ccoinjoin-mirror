@@ -294,8 +294,15 @@ const mockIpfsInfoWithExternal = {
   'protocolVersion': '9000'
 }
 
+const mockVerifiedPeers = [
+  'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
+  'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pBm',
+  'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pCm'
+]
+
 module.exports = {
   mockLatestData,
   mockIpfsInfoNoExternal,
-  mockIpfsInfoWithExternal
+  mockIpfsInfoWithExternal,
+  mockVerifiedPeers
 }

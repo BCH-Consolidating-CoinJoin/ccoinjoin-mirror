@@ -119,10 +119,29 @@ describe('p2p.js', () => {
     it('should connecto bootstrap peers', async () => {
       try {
         await p2p.connectToBootstrapPeers()
+
+        // Returning without throwing an error is a success.
         assert.equal(true, true, 'connectToBootstrapPeers succeeded.')
       } catch (err) {
         console.log(`connectToBootstrapPeers failed.`)
         assert.equal(true, false, 'connectToBootstrapPeers failed')
+      }
+    })
+  })
+
+  describe('connectToVerifiedPeers', () => {
+    it('should connecto bootstrap peers', async () => {
+      try {
+        // Mock the verified peers.
+        p2p.knownPeers.verifiedPeers = mockOrbitData.mockVerifiedPeers
+
+        await p2p.connectToVerifiedPeers()
+
+        // Returning without throwing an error is a success.
+        assert.equal(true, true, 'connectToVerifiedPeers succeeded.')
+      } catch (err) {
+        console.log(`connectToVerifiedPeers failed.`)
+        assert.equal(true, false, 'connectToVerifiedPeers failed')
       }
     })
   })
