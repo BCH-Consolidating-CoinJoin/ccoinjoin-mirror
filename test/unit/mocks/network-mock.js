@@ -31,15 +31,20 @@ class CCNet {
   }
 
   async readDB () {
+    return orbitdbMock.mockLatestData
+    /*
     return {
       payload: {
+
         value: {
           'peerHash': 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
           'multiaddr': '/ip4/10.0.2.15/tcp/4002/ipfs/Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
           'behindFirewall': true
         }
+
       }
     }
+    */
   }
 
   async writeDB (data) {

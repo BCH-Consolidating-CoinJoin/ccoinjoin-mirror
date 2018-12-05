@@ -21,8 +21,22 @@ const P2P = require('../../src/utils/p2p')
 let network, p2p
 
 describe('p2p.js', () => {
+  let savedPeerData = {}
+
   before(() => {
-    console.log(` `)
+    network = new Network()
+    p2p = new P2P(network)
+
+    // Save existing peer data
+    const filename = `${__dirname}/../../peers/known-peers.json`
+    savedPeerData = p2p.openKnownPeers(filename)
+  })
+
+  after(async () => {
+    network = new Network()
+    p2p = new P2P(network)
+
+    await p2p.saveKnownPeers(savedPeerData)
   })
 
   beforeEach(() => {
@@ -150,7 +164,7 @@ describe('p2p.js', () => {
     it('should save identification info before connecting to peers', async () => {
       try {
         await p2p.connectToPeers()
-        console.log(`p2p: ${util.inspect(p2p)}`)
+        // console.log(`p2p: ${util.inspect(p2p)}`)
 
         assert.equal(p2p.id.hash, mockOrbitData.mockIpfsInfoWithExternal.id)
         assert.equal(p2p.id.multiaddr, '/ip4/10.10.10.119/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67')
@@ -158,6 +172,14 @@ describe('p2p.js', () => {
         console.log(`connectToPeers failed.`)
         assert.equal(true, false, 'connectToPeers failed')
       }
+    })
+  })
+
+  describe('validatePeers', () => {
+    it('should validate peers.', async () => {
+      // p2p.network.readDB =
+      // mockOrbitData.mockLatestData
+      await p2p.validatePeers()
     })
   })
 })

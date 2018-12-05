@@ -146,10 +146,11 @@ class P2P {
       wlogger.silly(`entering p2p.js connectToBootstrapPeers().`)
 
       // console.log(`this.bootstrapPeers: ${util.inspect(this.bootstrapPeers)}`)
+      // console.log(`bootstrapPeers.length: ${this.bootstrapPeers.length}`)
 
       // Add all bootstrap peers to the IPFS swarm.
-      for (var i = 0; i < this.bootstrapPeers.length; i++) {
-        const thisPeer = this.bootstrapPeers[i]
+      for (var i = 0; i < this.bootstrapPeers.bootstrapPeers.length; i++) {
+        const thisPeer = this.bootstrapPeers.bootstrapPeers[i]
 
         // Prevent the node from trying to connect to itself.
         if (thisPeer.indexOf(this.id.hash) === -1) {
@@ -234,39 +235,35 @@ class P2P {
   }
 
   // Compare an array of peer hashes from OrbitDB with this nodes internal
-  // verifiedPeers list.
+  // verifiedPeers list. Validate the difference, and add them to the
+  // verifiedPeers list if we can successfully connect to them.
   async validatePeers () {
     try {
       wlogger.silly(`entering p2p.js validatePeers().`)
 
-      // Generate an array of all peers on the network.
+      // Get the raw data from OrbitDB.
       let latest = await this.network.readDB()
-      /*
-      const temp = []
-      temp.push(latest[0])
-      temp.push(latest[1])
-      temp.push(latest[2])
-      console.log(`temp: ${JSON.stringify(temp, null, 2)}`)
-*/
+
+      // Generate an array of unique peers listed in the DB.
       let peerArray = this.getUniquePeers(latest)
       peerArray = peerArray.filter(x => x !== null && x !== undefined)
       // console.log(`peerHashs: ${JSON.stringify(peerHashs, null, 2)}`)
 
-      console.log(`peerArray: ${JSON.stringify(peerArray, null, 2)}`)
+      wlogger.debug(`peerArray: ${JSON.stringify(peerArray, null, 2)}`)
 
       // Remove this nodes hash from the peerArray hash.
       const myHash = this.id.hash
       let peers = peerArray.filter(x => x !== myHash)
-      console.log(`peerArray with my hash removed: ${JSON.stringify(peers, null, 2)}`)
+      wlogger.debug(`peerArray with my hash removed: ${JSON.stringify(peers, null, 2)}`)
 
       // Remove any nodes from the bootstrap list.
       // https://stackoverflow.com/questions/19957348/javascript-arrays-remove-all-elements-contained-in-another-array
       peers = peers.filter(el => !ccoinjoinBootstrap.bootstrapHashs.includes(el))
-      console.log(`peers after removing bootstrap hashes: ${JSON.stringify(peers, null, 2)}`)
+      wlogger.debug(`peers after removing bootstrap hashes: ${JSON.stringify(peers, null, 2)}`)
 
       // Remove any nodes from the list that are already verified.
       peers = peers.filter(el => !this.knownPeers.verifiedPeers.includes(el))
-      console.log(`peers after removing verified peers: ${JSON.stringify(peers, null, 2)}`)
+      wlogger.debug(`peers after removing verified peers: ${JSON.stringify(peers, null, 2)}`)
 
       // Loop through the leftover peers.
       for (var i = 0; i < peers.length; i++) {
@@ -278,9 +275,9 @@ class P2P {
         // Connect to the peer
         try {
           await this.network.ipfs.swarm.connect(crAddr)
-          console.log(`Connected to peer ${thisPeer}.`)
+          wlogger.debug(`Connected to peer ${thisPeer}.`)
         } catch (err) {
-          console.log(`Could not connect to peer ${crAddr}`)
+          wlogger.debug(`Could not connect to peer ${crAddr}`)
           continue
         }
 
