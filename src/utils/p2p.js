@@ -8,6 +8,9 @@
 const fs = require('fs')
 const wlogger = require('../../src/utils/logging')
 
+const util = require('util')
+util.inspect.defaultOptions = { depth: 1 }
+
 const KNOWN_PEERS = `${__dirname}/../../peers/known-peers.json`
 
 // Load the boostrap peer list. This is used to initialize the P2P network.
@@ -17,10 +20,6 @@ const ccoinjoinBootstrap = require('../../peers/ccoinjoin-bootstrap.json')
 
 // Load the server config file.
 const config = require('../../config')
-
-// Used for debugging.
-const util = require('util')
-util.inspect.defaultOptions = { depth: 5 }
 
 class P2P {
   constructor (network) {
@@ -38,6 +37,8 @@ class P2P {
 
       // Open the known-peers file with saved peer information.
       this.knownPeers = this.openKnownPeers(KNOWN_PEERS)
+
+      this.bootstrapPeers = ccoinjoinBootstrap
 
       // Load the config data for this IPFS peer.
       this.ipfsData = config.ipfsData
@@ -139,18 +140,21 @@ class P2P {
   async connectToBootstrapPeers () {
     try {
       wlogger.silly(`entering p2p.js connectToBootstrapPeers().`)
+
+      // console.log(`this.bootstrapPeers: ${util.inspect(this.bootstrapPeers)}`)
+
       // Add all bootstrap peers to the IPFS swarm.
-      for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
-        const thisPeer = ccoinjoinBootstrap.bootstrapPeers[i]
+      for (var i = 0; i < this.bootstrapPeers.length; i++) {
+        const thisPeer = this.bootstrapPeers[i]
 
         // Prevent the node from trying to connect to itself.
         if (thisPeer.indexOf(this.id.hash) === -1) {
           try {
-            console.log(`Connecting to IPFS peer: ${thisPeer}`)
+            wlogger.debug(`Connecting to IPFS peer: ${thisPeer}`)
             // Connect to the bootstrap peers
             await this.network.ipfs.swarm.connect(thisPeer)
           } catch (err) {
-            console.log(`Error connecting to peer.`)
+            wlogger.debug(`Error connecting to peer.`)
           }
         }
       }

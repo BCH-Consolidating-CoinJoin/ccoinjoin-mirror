@@ -114,4 +114,16 @@ describe('p2p.js', () => {
       assert.equal(multiaddr, '/ip4/10.10.10.119/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67')
     })
   })
+
+  describe('connectToBootstrapPeers', () => {
+    it('should connecto bootstrap peers', async () => {
+      try {
+        await p2p.connectToBootstrapPeers()
+        assert.equal(true, true, 'connectToBootstrapPeers succeeded.')
+      } catch (err) {
+        console.log(`connectToBootstrapPeers failed.`)
+        assert.equal(true, false, 'connectToBootstrapPeers failed')
+      }
+    })
+  })
 })

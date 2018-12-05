@@ -4,10 +4,16 @@
 
 'use strict'
 
+const sinon = require('sinon')
+
 class CCNet {
   constructor () {
     this.bootstrap = { 'ccoinjoinBootstrap': [] }
-    this.ipfs = {}
+    this.ipfs = {
+      swarm: {
+        connect: sinon.stub().returns({})
+      }
+    }
     this.db = {}
     this.ipfsIsReady = false
     this.dbHasSynced = false
