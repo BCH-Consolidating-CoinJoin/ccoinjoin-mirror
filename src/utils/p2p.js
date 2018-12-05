@@ -48,7 +48,7 @@ class P2P {
     }
   }
 
-  // Attempt to connect to all peers in the knownPeers.verifiedPeers list.
+  // Try connecting to every known peer.
   async connectToPeers () {
     try {
       wlogger.silly(`entering p2p.js connectToPeers().`)
@@ -64,13 +64,15 @@ class P2P {
       this.ipfsData.peerHash = this.id.hash
       this.ipfsData.multiaddr = this.id.multiaddr
 
-      console.log(`IPFS ID: ${this.id.hash}`)
-      console.log(`multiaddr: ${this.id.multiaddr}`)
+      wlogger.info(`IPFS ID: ${this.id.hash}`)
+      wlogger.info(`multiaddr: ${this.id.multiaddr}`)
 
       // Connect to all bootstrap peers
       await this.connectToBootstrapPeers()
 
-      await sleep(10000)
+      // Wait 10 seconds before trying to connect to circuit-relay peers,
+      // if this isn't a test.
+      if (process.env.COINJOIN_ENV !== 'test') { await sleep(10000) }
 
       // Connect to all previously seen peers
       await this.connectToVerifiedPeers()
@@ -86,6 +88,7 @@ class P2P {
     }
   }
 
+  /*
   // Broadcasts the IPFS peer information for this peer to the network.
   async broadcastMyPeerInfo () {
     try {
@@ -100,6 +103,7 @@ class P2P {
       throw err
     }
   }
+*/
 
   // Connects to all peers listed in the knownPeers.verifiedPeers array.
   async connectToVerifiedPeers () {
@@ -121,12 +125,12 @@ class P2P {
           // const crAddr = `${circRelay}/p2p-circuit/ipfs/${thisPeer}`
             const crAddr = `/p2p-circuit/ipfs/${thisPeer}`
 
-            console.log(`Connecting to IPFS peer: ${crAddr}`)
+            wlogger.info(`Connecting to IPFS peer: ${crAddr}`)
             // Connect to the bootstrap peers
             await this.network.ipfs.swarm.connect(crAddr)
           } catch (err) {
           // console.log(`Error connecting to peer: `, err)
-            console.log(`Error connecting to peer ${thisPeer}`)
+            wlogger.error(`Error connecting to peer ${thisPeer}`)
           }
         }
       }

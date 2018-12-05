@@ -4,6 +4,8 @@
 
 'use strict'
 
+const orbitdbMock = require('./orbitdb-mock')
+
 const sinon = require('sinon')
 
 class CCNet {
@@ -12,7 +14,8 @@ class CCNet {
     this.ipfs = {
       swarm: {
         connect: sinon.stub().returns({})
-      }
+      },
+      id: sinon.stub().returns(orbitdbMock.mockIpfsInfoWithExternal)
     }
     this.db = {}
     this.ipfsIsReady = false

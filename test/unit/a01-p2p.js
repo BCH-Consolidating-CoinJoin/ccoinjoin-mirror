@@ -145,4 +145,19 @@ describe('p2p.js', () => {
       }
     })
   })
+
+  describe('connectToPeers', () => {
+    it('should save identification info before connecting to peers', async () => {
+      try {
+        await p2p.connectToPeers()
+        console.log(`p2p: ${util.inspect(p2p)}`)
+
+        assert.equal(p2p.id.hash, mockOrbitData.mockIpfsInfoWithExternal.id)
+        assert.equal(p2p.id.multiaddr, '/ip4/10.10.10.119/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67')
+      } catch (err) {
+        console.log(`connectToPeers failed.`)
+        assert.equal(true, false, 'connectToPeers failed')
+      }
+    })
+  })
 })

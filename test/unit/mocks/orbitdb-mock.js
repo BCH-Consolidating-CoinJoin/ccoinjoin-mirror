@@ -6,18 +6,19 @@
 
 const mockLatestData = [
   {
-    'hash': 'QmemuBhSrV2J4cqsjqwugNfeQ8se3QEzebzpPSRpcFPsXJ',
-    'id': '/orbitdb/QmSFYQzb4MtowNsZ6hYhBqvQAdPxLUFGj9RH5XY32TTFvU/ccoinjoin',
-    'payload': {
-      'op': 'ADD',
-      'key': null,
-      'value': {
-        'peerHash': 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
-        'multiaddr': '/ip4/10.0.2.15/tcp/4002/ipfs/Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
-        'behindFirewall': true
+    hash: 'QmemuBhSrV2J4cqsjqwugNfeQ8se3QEzebzpPSRpcFPsXJ',
+    id: '/orbitdb/QmSFYQzb4MtowNsZ6hYhBqvQAdPxLUFGj9RH5XY32TTFvU/ccoinjoin',
+    payload: {
+      op: 'ADD',
+      key: null,
+      value: {
+        peerHash: 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
+        multiaddr:
+          '/ip4/10.0.2.15/tcp/4002/ipfs/Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
+        behindFirewall: true
       }
     },
-    'next': [
+    next: [
       'QmUtYNGLB35Khymg2KNGeK6ie7UJj2rhBmsihqYB6cnC1Y',
       'QmfE71116grnCqMVYJaoYeFubwNJL96iF29dtt8LYzzrsj',
       'QmUCrEG9zDLx4zsgS53CqU2E3W1JMmdgMkyPTWKapS5qUf',
@@ -83,27 +84,31 @@ const mockLatestData = [
       'QmYY6TEFnxBBQEFscUDjd3GsYaHpZr8gE5cG4qESVcAgXz',
       'QmTaSHK5tpFRjjSERPykZdhf11WQB8NqQRiV3cuqEsFp8F'
     ],
-    'v': 0,
-    'clock': {
-      'id': '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a',
-      'time': 530
+    v: 0,
+    clock: {
+      id:
+        '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a',
+      time: 530
     },
-    'sig': '30460221009835822cf8f38324e447b55dbb579fc0312bdc051984c1d12b2e29c9ce38560402210082225cb6c3bd4d0c1cfaa0cfc65e08503fa54808e234dd95512832707108004d',
-    'key': '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a'
+    sig:
+      '30460221009835822cf8f38324e447b55dbb579fc0312bdc051984c1d12b2e29c9ce38560402210082225cb6c3bd4d0c1cfaa0cfc65e08503fa54808e234dd95512832707108004d',
+    key:
+      '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a'
   },
   {
-    'hash': 'QmdBTDnCU85iBjyPHKXQyUUtzYGfovfmyPB8DoUKCjjBZX',
-    'id': '/orbitdb/QmSFYQzb4MtowNsZ6hYhBqvQAdPxLUFGj9RH5XY32TTFvU/ccoinjoin',
-    'payload': {
-      'op': 'ADD',
-      'key': null,
-      'value': {
-        'peerHash': 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
-        'multiaddr': '/ip4/10.0.2.15/tcp/4002/ipfs/Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
-        'behindFirewall': true
+    hash: 'QmdBTDnCU85iBjyPHKXQyUUtzYGfovfmyPB8DoUKCjjBZX',
+    id: '/orbitdb/QmSFYQzb4MtowNsZ6hYhBqvQAdPxLUFGj9RH5XY32TTFvU/ccoinjoin',
+    payload: {
+      op: 'ADD',
+      key: null,
+      value: {
+        peerHash: 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
+        multiaddr:
+          '/ip4/10.0.2.15/tcp/4002/ipfs/Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
+        behindFirewall: true
       }
     },
-    'next': [
+    next: [
       'QmemuBhSrV2J4cqsjqwugNfeQ8se3QEzebzpPSRpcFPsXJ',
       'QmUtYNGLB35Khymg2KNGeK6ie7UJj2rhBmsihqYB6cnC1Y',
       'QmfE71116grnCqMVYJaoYeFubwNJL96iF29dtt8LYzzrsj',
@@ -169,27 +174,31 @@ const mockLatestData = [
       'QmSV6wfPS3sZ2yRK6sLuaaxBpYyZSq1kVuYu3EQhLrQUW4',
       'QmYY6TEFnxBBQEFscUDjd3GsYaHpZr8gE5cG4qESVcAgXz'
     ],
-    'v': 0,
-    'clock': {
-      'id': '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a',
-      'time': 531
+    v: 0,
+    clock: {
+      id:
+        '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a',
+      time: 531
     },
-    'sig': '30460221009835822cf8f38324e447b55dbb579fc0312bdc051984c1d12b2e29c9ce38560402210082225cb6c3bd4d0c1cfaa0cfc65e08503fa54808e234dd95512832707108004d',
-    'key': '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a'
+    sig:
+      '30460221009835822cf8f38324e447b55dbb579fc0312bdc051984c1d12b2e29c9ce38560402210082225cb6c3bd4d0c1cfaa0cfc65e08503fa54808e234dd95512832707108004d',
+    key:
+      '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a'
   },
   {
-    'hash': 'QmdHEF9VtepWqmLcCS6mmSYtGtvbTWP2uSw1BJ5wrXdiTL',
-    'id': '/orbitdb/QmSFYQzb4MtowNsZ6hYhBqvQAdPxLUFGj9RH5XY32TTFvU/ccoinjoin',
-    'payload': {
-      'op': 'ADD',
-      'key': null,
-      'value': {
-        'peerHash': 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
-        'multiaddr': '/ip4/10.0.2.15/tcp/4002/ipfs/Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
-        'behindFirewall': true
+    hash: 'QmdHEF9VtepWqmLcCS6mmSYtGtvbTWP2uSw1BJ5wrXdiTL',
+    id: '/orbitdb/QmSFYQzb4MtowNsZ6hYhBqvQAdPxLUFGj9RH5XY32TTFvU/ccoinjoin',
+    payload: {
+      op: 'ADD',
+      key: null,
+      value: {
+        peerHash: 'Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
+        multiaddr:
+          '/ip4/10.0.2.15/tcp/4002/ipfs/Qmc8uaP9yegYmfxazB2YD7i6G4c2tnQRJvxYyWbM6w6pAm',
+        behindFirewall: true
       }
     },
-    'next': [
+    next: [
       'QmdBTDnCU85iBjyPHKXQyUUtzYGfovfmyPB8DoUKCjjBZX',
       'QmemuBhSrV2J4cqsjqwugNfeQ8se3QEzebzpPSRpcFPsXJ',
       'QmUtYNGLB35Khymg2KNGeK6ie7UJj2rhBmsihqYB6cnC1Y',
@@ -255,34 +264,39 @@ const mockLatestData = [
       'QmU9LWEYFCk2yASYAHRhCPB7KF1VgLZW36LoYF2YFoCYeW',
       'QmSV6wfPS3sZ2yRK6sLuaaxBpYyZSq1kVuYu3EQhLrQUW4'
     ],
-    'v': 0,
-    'clock': {
-      'id': '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a',
-      'time': 532
+    v: 0,
+    clock: {
+      id:
+        '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a',
+      time: 532
     },
-    'sig': '30460221009835822cf8f38324e447b55dbb579fc0312bdc051984c1d12b2e29c9ce38560402210082225cb6c3bd4d0c1cfaa0cfc65e08503fa54808e234dd95512832707108004d',
-    'key': '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a'
+    sig:
+      '30460221009835822cf8f38324e447b55dbb579fc0312bdc051984c1d12b2e29c9ce38560402210082225cb6c3bd4d0c1cfaa0cfc65e08503fa54808e234dd95512832707108004d',
+    key:
+      '04cbb871e25dca482d8ad76867b885184c24c569a528799c5fc72cc6f9b1c841268c208b59c6f9f2e2aee33dd508a0c3a19940dedde06015875e6ad92971dad86a'
   }
 ]
 
 const mockIpfsInfoNoExternal = {
-  'id': 'QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
-  'publicKey': 'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCAa5Zevgv51ctXKREokKjJ4VcsgciqSJxeDBjwIBubqS2YAJSoSm0vkzOXS7dpwtRhrO4s2zHxrykPxyUao7Esq3G6fQsykPoqmISWo1FB5uR25MuaiZ/63XXFwE7/72IbBQxflTFI1s9x8Ie7BVPE6lfgqUD8i1NrII7HrQaoZ+L0rGSBsq/EHjJhlKM8/16vPM8c0JGS+cjxjuLUH4Ip/L66RRv65D4ucopQnogGNzHAmypGgFSvc0lzeh6lWI/2Ftf/PBUg6IHQ9JtKbeWaqaRJDI5vYLsNp3HJ3UMkr6DJ2j2c+Lqtf5RIuMyIxsZPTJoixKh8tc77OId7czrVAgMBAAE=',
-  'addresses': [
+  id: 'QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+  publicKey:
+    'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCAa5Zevgv51ctXKREokKjJ4VcsgciqSJxeDBjwIBubqS2YAJSoSm0vkzOXS7dpwtRhrO4s2zHxrykPxyUao7Esq3G6fQsykPoqmISWo1FB5uR25MuaiZ/63XXFwE7/72IbBQxflTFI1s9x8Ie7BVPE6lfgqUD8i1NrII7HrQaoZ+L0rGSBsq/EHjJhlKM8/16vPM8c0JGS+cjxjuLUH4Ip/L66RRv65D4ucopQnogGNzHAmypGgFSvc0lzeh6lWI/2Ftf/PBUg6IHQ9JtKbeWaqaRJDI5vYLsNp3HJ3UMkr6DJ2j2c+Lqtf5RIuMyIxsZPTJoixKh8tc77OId7czrVAgMBAAE=',
+  addresses: [
     '/ip4/127.0.0.1/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
     '/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
     '/p2p-circuit/ip4/0.0.0.0/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
     '/p2p-circuit/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
     '/p2p-circuit/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67'
   ],
-  'agentVersion': 'js-ipfs/0.33.1',
-  'protocolVersion': '9000'
+  agentVersion: 'js-ipfs/0.33.1',
+  protocolVersion: '9000'
 }
 
 const mockIpfsInfoWithExternal = {
-  'id': 'QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
-  'publicKey': 'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCAa5Zevgv51ctXKREokKjJ4VcsgciqSJxeDBjwIBubqS2YAJSoSm0vkzOXS7dpwtRhrO4s2zHxrykPxyUao7Esq3G6fQsykPoqmISWo1FB5uR25MuaiZ/63XXFwE7/72IbBQxflTFI1s9x8Ie7BVPE6lfgqUD8i1NrII7HrQaoZ+L0rGSBsq/EHjJhlKM8/16vPM8c0JGS+cjxjuLUH4Ip/L66RRv65D4ucopQnogGNzHAmypGgFSvc0lzeh6lWI/2Ftf/PBUg6IHQ9JtKbeWaqaRJDI5vYLsNp3HJ3UMkr6DJ2j2c+Lqtf5RIuMyIxsZPTJoixKh8tc77OId7czrVAgMBAAE=',
-  'addresses': [
+  id: 'QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
+  publicKey:
+    'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCAa5Zevgv51ctXKREokKjJ4VcsgciqSJxeDBjwIBubqS2YAJSoSm0vkzOXS7dpwtRhrO4s2zHxrykPxyUao7Esq3G6fQsykPoqmISWo1FB5uR25MuaiZ/63XXFwE7/72IbBQxflTFI1s9x8Ie7BVPE6lfgqUD8i1NrII7HrQaoZ+L0rGSBsq/EHjJhlKM8/16vPM8c0JGS+cjxjuLUH4Ip/L66RRv65D4ucopQnogGNzHAmypGgFSvc0lzeh6lWI/2Ftf/PBUg6IHQ9JtKbeWaqaRJDI5vYLsNp3HJ3UMkr6DJ2j2c+Lqtf5RIuMyIxsZPTJoixKh8tc77OId7czrVAgMBAAE=',
+  addresses: [
     '/ip4/127.0.0.1/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
     '/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
     '/ip4/10.10.10.119/tcp/4002/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
@@ -290,8 +304,8 @@ const mockIpfsInfoWithExternal = {
     '/p2p-circuit/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67',
     '/p2p-circuit/ipfs/QmcGsP3yEMs4zTwxntZomhKyz5qEq6zCerkjrbiv95GJ67'
   ],
-  'agentVersion': 'js-ipfs/0.33.1',
-  'protocolVersion': '9000'
+  agentVersion: 'js-ipfs/0.33.1',
+  protocolVersion: '9000'
 }
 
 const mockVerifiedPeers = [
