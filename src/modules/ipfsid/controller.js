@@ -1,6 +1,6 @@
 /*
-  Router for standard output API - used by wallets to query the standardize
-  output values of BCH, which is at the heart of a successful CoinJoin.
+  Router for retrieving information about the p2p database and IPFS peer information
+  for this node.
 */
 
 async function getIPFSID (ctx) {
