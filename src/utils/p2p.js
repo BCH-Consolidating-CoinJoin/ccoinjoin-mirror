@@ -8,6 +8,11 @@
 const fs = require('fs')
 const wlogger = require('../../src/utils/logging')
 
+const util = require('util')
+util.inspect.defaultOptions = { depth: 1 }
+
+const KNOWN_PEERS = `${__dirname}/../../peers/known-peers.json`
+
 // Load the boostrap peer list. This is used to initialize the P2P network.
 // This is a list mirror servers dedicated to supporting the CCoinJoin network
 // over the long term.
@@ -15,10 +20,6 @@ const ccoinjoinBootstrap = require('../../peers/ccoinjoin-bootstrap.json')
 
 // Load the server config file.
 const config = require('../../config')
-
-// Used for debugging.
-const util = require('util')
-util.inspect.defaultOptions = { depth: 1 }
 
 class P2P {
   constructor (network) {
@@ -35,7 +36,9 @@ class P2P {
       }
 
       // Open the known-peers file with saved peer information.
-      this.knownPeers = this.openKnownPeers()
+      this.knownPeers = this.openKnownPeers(KNOWN_PEERS)
+
+      this.bootstrapPeers = ccoinjoinBootstrap
 
       // Load the config data for this IPFS peer.
       this.ipfsData = config.ipfsData
@@ -45,7 +48,7 @@ class P2P {
     }
   }
 
-  // Attempt to connect to all peers in the knownPeers.verifiedPeers list.
+  // Try connecting to every known peer.
   async connectToPeers () {
     try {
       wlogger.silly(`entering p2p.js connectToPeers().`)
@@ -61,13 +64,15 @@ class P2P {
       this.ipfsData.peerHash = this.id.hash
       this.ipfsData.multiaddr = this.id.multiaddr
 
-      console.log(`IPFS ID: ${this.id.hash}`)
-      console.log(`multiaddr: ${this.id.multiaddr}`)
+      wlogger.info(`IPFS ID: ${this.id.hash}`)
+      wlogger.info(`multiaddr: ${this.id.multiaddr}`)
 
       // Connect to all bootstrap peers
       await this.connectToBootstrapPeers()
 
-      await sleep(10000)
+      // Wait 10 seconds before trying to connect to circuit-relay peers,
+      // if this isn't a test.
+      if (process.env.COINJOIN_ENV !== 'test') { await sleep(10000) }
 
       // Connect to all previously seen peers
       await this.connectToVerifiedPeers()
@@ -75,14 +80,15 @@ class P2P {
       // Connect to the OrbitDB.
       // await network.connectToOrbitDB(ccoinjoinBootstrap.dbAddress)
 
-    // Add this nodes IPFS connection information to the OrbitDB.
-    // await this.broadcastMyPeerInfo()
+      // Add this nodes IPFS connection information to the OrbitDB.
+      // await this.broadcastMyPeerInfo()
     } catch (err) {
       wlogger.debug(`Error in p2p.js/connectToPeers()`, err)
       throw err
     }
   }
 
+  /*
   // Broadcasts the IPFS peer information for this peer to the network.
   async broadcastMyPeerInfo () {
     try {
@@ -97,6 +103,7 @@ class P2P {
       throw err
     }
   }
+*/
 
   // Connects to all peers listed in the knownPeers.verifiedPeers array.
   async connectToVerifiedPeers () {
@@ -118,12 +125,12 @@ class P2P {
           // const crAddr = `${circRelay}/p2p-circuit/ipfs/${thisPeer}`
             const crAddr = `/p2p-circuit/ipfs/${thisPeer}`
 
-            console.log(`Connecting to IPFS peer: ${crAddr}`)
+            wlogger.info(`Connecting to IPFS peer: ${crAddr}`)
             // Connect to the bootstrap peers
             await this.network.ipfs.swarm.connect(crAddr)
           } catch (err) {
           // console.log(`Error connecting to peer: `, err)
-            console.log(`Error connecting to peer ${thisPeer}`)
+            wlogger.error(`Error connecting to peer ${thisPeer}`)
           }
         }
       }
@@ -137,18 +144,22 @@ class P2P {
   async connectToBootstrapPeers () {
     try {
       wlogger.silly(`entering p2p.js connectToBootstrapPeers().`)
+
+      // console.log(`this.bootstrapPeers: ${util.inspect(this.bootstrapPeers)}`)
+      // console.log(`bootstrapPeers.length: ${this.bootstrapPeers.length}`)
+
       // Add all bootstrap peers to the IPFS swarm.
-      for (var i = 0; i < ccoinjoinBootstrap.bootstrapPeers.length; i++) {
-        const thisPeer = ccoinjoinBootstrap.bootstrapPeers[i]
+      for (var i = 0; i < this.bootstrapPeers.bootstrapPeers.length; i++) {
+        const thisPeer = this.bootstrapPeers.bootstrapPeers[i]
 
         // Prevent the node from trying to connect to itself.
         if (thisPeer.indexOf(this.id.hash) === -1) {
           try {
-            console.log(`Connecting to IPFS peer: ${thisPeer}`)
+            wlogger.debug(`Connecting to IPFS peer: ${thisPeer}`)
             // Connect to the bootstrap peers
             await this.network.ipfs.swarm.connect(thisPeer)
           } catch (err) {
-            console.log(`Error connecting to peer.`)
+            wlogger.debug(`Error connecting to peer.`)
           }
         }
       }
@@ -158,7 +169,8 @@ class P2P {
     }
   }
 
-  // This function should (hopefullreturn the correct mutliaddr for connecting to this peer.
+  // This function should (hopefully) return the correct mutliaddr for
+  // connecting to this peer.
   getMultiaddr (thisIpfsInfo) {
     try {
       wlogger.silly(`entering p2p.js getMultiaddr().`)
@@ -166,8 +178,11 @@ class P2P {
       let addresses = thisIpfsInfo.addresses
       addresses = addresses.filter(x => x.indexOf('p2p-circuit') === -1)
       addresses = addresses.filter(x => x.indexOf('127.0.0.1') === -1)
-      const last = addresses.length - 1
 
+      // Return an empty string if no external multiaddr is generated.
+      if (addresses.length === 0) return ''
+
+      const last = addresses.length - 1
       return addresses[last]
     } catch (err) {
       wlogger.debug(`Error in p2p.js/getMultiaddr()`, err)
@@ -176,8 +191,8 @@ class P2P {
   }
 
   // Open and read known-peers.json
-  openKnownPeers () {
-    const filename = '../../peers/known-peers.json'
+  openKnownPeers (filename) {
+    // const filename = '../../peers/known-peers.json'
 
     try {
       wlogger.silly(`entering p2p.js openKnownPeers().`)
@@ -220,32 +235,35 @@ class P2P {
   }
 
   // Compare an array of peer hashes from OrbitDB with this nodes internal
-  // verifiedPeers list.
+  // verifiedPeers list. Validate the difference, and add them to the
+  // verifiedPeers list if we can successfully connect to them.
   async validatePeers () {
     try {
       wlogger.silly(`entering p2p.js validatePeers().`)
 
-      // Generate an array of all peers on the network.
+      // Get the raw data from OrbitDB.
       let latest = await this.network.readDB()
+
+      // Generate an array of unique peers listed in the DB.
       let peerArray = this.getUniquePeers(latest)
       peerArray = peerArray.filter(x => x !== null && x !== undefined)
       // console.log(`peerHashs: ${JSON.stringify(peerHashs, null, 2)}`)
 
-      console.log(`peerArray: ${JSON.stringify(peerArray, null, 2)}`)
+      wlogger.debug(`peerArray: ${JSON.stringify(peerArray, null, 2)}`)
 
       // Remove this nodes hash from the peerArray hash.
       const myHash = this.id.hash
       let peers = peerArray.filter(x => x !== myHash)
-      console.log(`peerArray with my hash removed: ${JSON.stringify(peers, null, 2)}`)
+      wlogger.debug(`peerArray with my hash removed: ${JSON.stringify(peers, null, 2)}`)
 
       // Remove any nodes from the bootstrap list.
       // https://stackoverflow.com/questions/19957348/javascript-arrays-remove-all-elements-contained-in-another-array
       peers = peers.filter(el => !ccoinjoinBootstrap.bootstrapHashs.includes(el))
-      console.log(`peers after removing bootstrap hashes: ${JSON.stringify(peers, null, 2)}`)
+      wlogger.debug(`peers after removing bootstrap hashes: ${JSON.stringify(peers, null, 2)}`)
 
       // Remove any nodes from the list that are already verified.
       peers = peers.filter(el => !this.knownPeers.verifiedPeers.includes(el))
-      console.log(`peers after removing verified peers: ${JSON.stringify(peers, null, 2)}`)
+      wlogger.debug(`peers after removing verified peers: ${JSON.stringify(peers, null, 2)}`)
 
       // Loop through the leftover peers.
       for (var i = 0; i < peers.length; i++) {
@@ -257,9 +275,9 @@ class P2P {
         // Connect to the peer
         try {
           await this.network.ipfs.swarm.connect(crAddr)
-          console.log(`Connected to peer ${thisPeer}.`)
+          wlogger.debug(`Connected to peer ${thisPeer}.`)
         } catch (err) {
-          console.log(`Could not connect to peer ${crAddr}`)
+          wlogger.debug(`Could not connect to peer ${crAddr}`)
           continue
         }
 
@@ -275,17 +293,23 @@ class P2P {
     }
   }
 
-  // Gets the mutliaddr for unique peers
+  // Process raw data from OrbitDB and return an array of unique peer hashs.
   getUniquePeers (dbRawData) {
     try {
       wlogger.silly(`entering p2p.js getUniquePeers().`)
+
+      // Get only the payload data from the raw DB JSON.
       const payloads = dbRawData.map(entry => entry.payload.value)
       // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
 
+      // Get only the peer hash field of each DB entry.
       const peers = payloads.map(entry => entry.peerHash)
       // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
 
+      // Filter out duplicate entries.
       const uniquePeers = peers.filter(this.getUnique)
+
+      // Return the unique peer hashes.
       return uniquePeers
     } catch (err) {
       wlogger.debug(`Error in p2p.js/getUniquePeers()`, err)
