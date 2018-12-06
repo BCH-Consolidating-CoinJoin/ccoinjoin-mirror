@@ -4,7 +4,8 @@ module.exports = {
   ipfsData: {
     peerHash: '',
     multiaddr: '',
-    behindFirewall: true
+    behindFirewall: true,
+    entity: 'ipfs'
   },
   orbitDBAddr: '/orbitdb/QmSFYQzb4MtowNsZ6hYhBqvQAdPxLUFGj9RH5XY32TTFvU/ccoinjoin'
 }

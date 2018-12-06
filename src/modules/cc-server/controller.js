@@ -4,6 +4,8 @@
 */
 
 const rp = require('request-promise')
+// const Network = require('ccoinjoin-network')
+// const network = new Network()
 
 async function addServer (ctx) {
   try {
@@ -37,6 +39,11 @@ async function addServer (ctx) {
     console.log(`result: ${JSON.stringify(result, null, 2)}`)
 
     // Add the server to the known-peers information.
+    serverData.entity = 'ccoinjoin-server'
+    const writeHash = await ctx.network.writeDB(serverData)
+
+    console.log(`Added this information to the OrbitDB: ${JSON.stringify(serverData, null, 2)}`)
+    console.log(`writeHash: ${writeHash}`)
 
     /*
   ctx.body = {

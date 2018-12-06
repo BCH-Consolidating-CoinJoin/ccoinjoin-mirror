@@ -89,6 +89,10 @@ async function startServer () {
     wlogger.silly(`Added this information to the OrbitDB: ${JSON.stringify(p2p.ipfsData, null, 2)}`)
     wlogger.silly(`writeHash: ${writeHash}`)
 
+    // Add the network and p2p instances to the context.
+    app.context.network = network
+    app.context.p2p = p2p
+
     // Create a timer that periodically updates the server information on the DB.
     setInterval(async function () {
       wlogger.silly(`Starting interval.`)
