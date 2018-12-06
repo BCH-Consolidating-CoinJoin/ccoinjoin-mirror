@@ -108,6 +108,9 @@ async function startServer () {
 
       // Find and validate peers
       p2p.validatePeers()
+
+      // Find and validate CCoinJoin serers
+      p2p.validateServers()
     }, UPDATE_PERIOD)
   }
 

@@ -293,6 +293,50 @@ class P2P {
     }
   }
 
+  // Compare an array of CCoinJoin servers from OrbitDB with this nodes internal
+  // verifiedServers list. Validate the difference, and add the validated servers
+  // to the verifiedServers list if this node can successfully connect to them.
+  async validateServers () {
+    try {
+      wlogger.silly(`entering p2p.js validateServers().`)
+
+      // Get the raw data from OrbitDB.
+      let latest = await this.network.readDB()
+
+      // Generate an array of unique servers listed in the DB.
+      let serverArray = this.getUniqueServers(latest)
+      serverArray = serverArray.filter(x => x !== null && x !== undefined)
+      console.log(`serverArray: ${JSON.stringify(serverArray, null, 2)}`)
+    } catch (err) {
+      wlogger.debug(`Error in p2p.js/validateServers()`, err)
+      throw err
+    }
+  }
+
+  // Process raw data from OrbitDB and return an array of unique servers
+  getUniqueServers (dbRawData) {
+    try {
+      wlogger.silly(`entering p2p.js getUniqueServers().`)
+
+      // Get only the payload data from the raw DB JSON.
+      const payloads = dbRawData.map(entry => entry.payload.value)
+      // console.log(`payloads: ${JSON.stringify(payloads, null, 2)}`)
+
+      // Get only the peer hash field of each DB entry.
+      const servers = payloads.filter(entry => entry.entity === 'ccoinjoin-server')
+      console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
+
+      // Filter out duplicate entries.
+      const uniqueServers = servers.filter(this.getUnique)
+
+      // Return the unique peer hashes.
+      return uniqueServers
+    } catch (err) {
+      wlogger.debug(`Error in p2p.js/getUniqueServers()`, err)
+      throw err
+    }
+  }
+
   // Process raw data from OrbitDB and return an array of unique peer hashs.
   getUniquePeers (dbRawData) {
     try {
