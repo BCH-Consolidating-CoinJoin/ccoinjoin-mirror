@@ -6,6 +6,7 @@
 'use strict'
 
 const fs = require('fs')
+const rp = require('request-promise')
 const wlogger = require('../../src/utils/logging')
 
 const util = require('util')
@@ -306,10 +307,57 @@ class P2P {
       // Generate an array of unique servers listed in the DB.
       let serverArray = this.getUniqueServers(latest)
       serverArray = serverArray.filter(x => x !== null && x !== undefined)
-      console.log(`serverArray: ${JSON.stringify(serverArray, null, 2)}`)
+      wlogger.silly(`serverArray after getUniqueServers(): ${JSON.stringify(serverArray, null, 2)}`)
+
+      // Remove any servers already in the verifiedServers array.
+      serverArray = serverArray.filter(x => this.knownPeers.verifiedServers.indexOf(x.url) === -1)
+      wlogger.silly(`serverArray after filtering against verifiedServers: ${JSON.stringify(serverArray, null, 2)}`)
+
+      // Loop through any remaining servers.
+      for (let i = 0; i < serverArray.length; i++) {
+        const thisServer = serverArray[i]
+
+        // Connect to the ccoinjoin standard output API endpoint. This servers two
+        // purposes: 1) proves the server is alive and this app can connect to it.
+        // 2) Gets the standardized output for this server.
+        const coinjoinout = await this.pingServer(thisServer)
+        wlogger.silly(`coinjoinout: ${coinjoinout}`)
+
+        // If successful, add the server to the verifiedServers array.
+        if (coinjoinout) {
+          thisServer.coinjoinout = coinjoinout
+
+          this.knownPeers.verifiedServers.push(thisServer.url)
+          this.knownPeers.verifiedServerInfo.push(thisServer)
+        }
+      }
+
+      // Could save the list here, but it will automatically be saved on the next
+      // iteration.
     } catch (err) {
       wlogger.debug(`Error in p2p.js/validateServers()`, err)
       throw err
+    }
+  }
+
+  async pingServer (server) {
+    try {
+      const options = {
+        method: 'GET',
+        uri: `${server.url}/coinjoinout`,
+        json: true,
+        headers: {
+          Accept: 'application/json'
+        }
+      }
+
+      const result = await rp(options)
+      console.log(`ping result: ${util.inspect(result)}`)
+
+      return result.coinjoinout
+    } catch (err) {
+      wlogger.error(`Error in pingServer: `, err)
+      return false
     }
   }
 
@@ -324,10 +372,16 @@ class P2P {
 
       // Get only the peer hash field of each DB entry.
       const servers = payloads.filter(entry => entry.entity === 'ccoinjoin-server')
-      console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
+      // console.log(`servers: ${JSON.stringify(servers, null, 2)}`)
 
       // Filter out duplicate entries.
-      const uniqueServers = servers.filter(this.getUnique)
+      const uniqueServers = servers.filter((value, index, self) => {
+        // Extract just the url.
+        const url = self.map(x => x.url)
+
+        // Filter out duplicates of the url.
+        return url.indexOf(value.url) === index
+      })
 
       // Return the unique peer hashes.
       return uniqueServers
