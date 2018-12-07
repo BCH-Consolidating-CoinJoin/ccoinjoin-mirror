@@ -67,7 +67,8 @@ describe('p2p.js', () => {
         'seenServers',
         'verifiedServers',
         'seenPeers',
-        'verifiedPeers'
+        'verifiedPeers',
+        'verifiedServerInfo'
       ])
     })
   })
