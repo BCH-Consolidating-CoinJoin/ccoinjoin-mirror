@@ -57,7 +57,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
-    "semantic-release": "^15.12.4",
+    "semantic-release": "^15.13.16",
     "sinon": "^7.1.1"
   },
   "release": {
