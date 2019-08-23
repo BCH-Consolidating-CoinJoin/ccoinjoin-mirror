@@ -31,7 +31,7 @@
   "dependencies": {
     "ccoinjoin-network": "^1.0.7",
     "glob": "^7.0.0",
-    "ipfs": "^0.33.1",
+    "ipfs": "^0.37.1",
     "kcors": "^2.2.1",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
