@@ -30,7 +30,7 @@
   "repository": "BCH-Consolidating-CoinJoin/ccoinjoin-mirror",
   "dependencies": {
     "ccoinjoin-network": "^1.0.7",
-    "glob": "^7.0.0",
+    "glob": "^7.1.5",
     "ipfs": "^0.33.1",
     "kcors": "^2.2.1",
     "koa": "^2.5.0",
